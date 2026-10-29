@@ -209,18 +209,18 @@ arranque necesita una fila de esta tabla detrás: si no puedes nombrar el trigge
 
 | Rol | Modelo | Effort |
 |-----|--------|--------|
-| Finder mecánico: secretos en el diff, TODO y ramas muertas, naming y convenciones contra CLAUDE.md | Haiku 4.5 | — |
-| Finder de criterio: bugs y regresiones, "cumple la tarea", seguridad y datos | Sonnet 5 | `medium` |
+| Finder mecánico: secretos en el diff, TODO y ramas muertas, naming y convenciones contra CLAUDE.md | Haiku 5.5 | — |
+| Finder de criterio: bugs y regresiones, "cumple la tarea", seguridad y datos | Sonnet 5.5 | `medium` |
 | Orquestador: dedupe, severidad y veredicto | Opus 5.5 | `medium` (su default; equivale a `high` de Opus 5) |
 | Verificador adversarial de bloqueantes | Opus 5.5 | `high` · `xhigh` si es seguridad, concurrencia, dinero o migración (de datos o de esquema) |
-| Diff enorme o auditoría multi-área | Opus 5.5 como orquestador (sostiene auditorías de horas con subagentes) | `high` · Fable 5 solo si el usuario lo pide o es multi-repo |
+| Diff enorme o auditoría multi-área | Opus 5.5 como orquestador (sostiene auditorías de horas con subagentes) | `high` · Fable 5.1 solo si el usuario lo pide o es multi-repo |
 
 Haiku sí entra, pero solo en el rol mecánico: buscar un patrón y citar `archivo:línea`. Nunca decide
 severidad, nunca escribe el veredicto y nunca juzga si el cambio cumple la tarea — para eso hace
 falta criterio, y ahí Haiku genera ruido que luego cuesta más filtrar de lo que ahorró.
 
 Sin subagentes el orquestador es el único rol que hay: ese es el modelo y el effort del prompt, salvo
-que sea un diff < ~200 líneas en un área conocida, donde basta Sonnet 5 con `medium`. `max` se
+que sea un diff < ~200 líneas en un área conocida, donde basta Sonnet 5.5 con `medium`. `max` se
 reserva a un incidente sobre datos reales. El mínimo que encaje; ante la duda manda el coste de
 equivocarse, no el tamaño del diff. Los nombres de nivel no equivalen entre modelos: no arrastres a
 Opus 5.5 el `high` que usabas en Opus 5 — piensa más por turno a igual nivel, sobre todo en
@@ -232,8 +232,8 @@ Opus 5.5 el `high` que usabas en Opus 5 — piensa más por turno a igual nivel,
 2. El **prompt en inglés** en un bloque de código copiable.
 3. Línea **"Cómo lanzarlo"**: `Modelo: <orquestador> · Effort: <nivel> · Ultracode: <plan>` + una
    frase de razón. El plan nunca es un "sí" a secas: dice con qué arranca, con qué trigger sube y
-   dónde está el tope — p. ej. `Ultracode: sí — arranca con 2 finders en Sonnet 5 (bugs, cumple la
-   tarea) + 1 en Haiku 4.5 (secretos y convenciones), veredicto en Opus 5.5; sube a verificador solo
+   dónde está el tope — p. ej. `Ultracode: sí — arranca con 2 finders en Sonnet 5.5 (bugs, cumple la
+   tarea) + 1 en Haiku 5.5 (secretos y convenciones), veredicto en Opus 5.5; sube a verificador solo
    si sale un candidato a bloqueante; tope 6`. Si es sí, recuerda anteponer `ultracode` al prompt.
 4. Una línea: "Dime «ejecútalo» y la corro yo aquí."
 

@@ -265,4 +265,4 @@ You only return the text.
 - Splitting for the sake of it (parallel sessions or phases for something that fits in one session). → Splitting costs coordination; only if the parts are independent or the task does not fit in one context.
 - Implementation prompt with no check available. → The first chunk is creating the check (test, Playwright, query), or warning that it will not be verified.
 
-Origen: adaptada del plugin interno bettergy-internal-tools (craft-prompt).
+Origen: adaptada de una versión interna de craft-prompt.

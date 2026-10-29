@@ -61,8 +61,8 @@ Si el cambio toca más de un repo (p. ej. una variable de entorno en la app y en
 
 1. **¿Se parte la PR/MR?** Antes de crear la rama, busca piezas que se puedan mergear por separado: un renombrado o refactor que el encargo no pide, una migración o un contrato de API que no depende de la UI, una limpieza. Si las hay, propón al usuario el reparto (qué PR/MR, en qué orden, de qué depende cada una) con tu recomendación y espera su respuesta. Un refactor o renombrado que el encargo no pide va siempre en su PR/MR. Si no las hay, dilo en una línea: «Una PR/MR: <por qué no se parte>».
 2. Una frase con qué significa «terminado».
-3. Tarea de varios pasos o ficheros: plan con `superpowers:writing-plans` y **consulta al advisor antes de ejecutarlo**.
-4. Búsquedas amplias → subagente `explorer`; partes independientes → `worker` en paralelo.
+3. Tarea de varios pasos o ficheros: un plan escrito antes de ejecutarlo. Hazlo con `superpowers:writing-plans` si está instalada; si no, un plan breve en el chat o en un fichero. Si la sesión tiene advisor, **consúltalo antes de ejecutarlo**.
+4. Búsquedas amplias → un subagente de exploración (`explorer` si existe; si no, `Explore`). Partes independientes → subagentes en paralelo (`worker` si existe).
 
 ## 3. Rama
 
@@ -80,7 +80,7 @@ Si el flujo es PR/MR y la sesión puede hacer push, la rama se sube nada más cr
 
 ## 4. Implementar
 
-`superpowers:test-driven-development`: el test falla por el motivo correcto antes de implementar. Comentarios: solo un porqué no obvio, en una línea.
+Test primero (con `superpowers:test-driven-development` si está instalada): el test falla por el motivo correcto antes de implementar. Comentarios: solo un porqué no obvio, en una línea.
 
 **Cada commit se empuja en el momento** (si la sesión puede empujar), no se acumulan commits locales hasta el final. Sin `--no-verify`: si un hook falla, se arregla la causa.
 
@@ -99,7 +99,7 @@ Si el cambio necesita ficheros o piezas que el encargo no nombraba (fixtures, do
    - `/code-review` sobre la rama (o `craft-review` si el usuario la prefiere).
 
    Arregla lo que confirme. Lo que se queda como está va a «Notas para el revisor» con el porqué. Deja constancia ahí mismo de qué revisión corrió, cuántos hallazgos arregló y cuántos dejó. **Que luego revise otra persona no la sustituye.**
-4. **Advisor**: consúltalo con el diff y lo verificado antes de cerrar.
+4. **Advisor** (si la sesión lo tiene): consúltalo con el diff y lo verificado antes de cerrar.
 
 ### Casos límite (lo que más cazan los revisores)
 
