@@ -48,6 +48,24 @@ Si dudas entre dos columnas, aplica la más restrictiva. Pide el OK con una sola
 - Cada brief sigue `.claude/skills/centro-control/references/brief-trabajador.md`. Ninguna sesión
   arranca con un brief vago.
 
+## Cómo trabaja el usuario: jefes e hijas
+
+El usuario trabaja así en todos sus PCs:
+
+- Cada proyecto tiene una **sesión jefe**, que es la sesión padre. Con ella tiene el ~90 % de su conversación.
+- Las **hijas** las crea el jefe, porque el usuario se lo pide o porque lo decide él solo. Le informan a él:
+  la app avisa al jefe cuando una hija termina un turno, no a ti.
+- La jerarquía sale de `startedBy` (en `list_sessions`) y de `parentSessionId` (en `get_session`). Puede tener
+  varios niveles. Una sesión sin padre en un proyecto es candidata a jefe; si hay más de una, pregúntale al usuario cuál es.
+
+Tú no compites con el jefe: él es el interlocutor del proyecto.
+
+- **Trabajo nuevo en un proyecto con jefe activo:** por defecto se lo pasas al jefe con un mensaje (E, con OK),
+  para que cree él la hija. Solo lanzas tú una sesión si el proyecto no tiene jefe o si el usuario te lo pide expresamente.
+- **Preguntas de una hija:** las gestiona su jefe. Solo te ocupas de ellas si el jefe está parado y la hija
+  sigue esperando al usuario.
+- **Mensajes:** a quien le hablas de un proyecto es al jefe. A una hija, solo si el usuario lo pide.
+
 ## Lo que la app te permite (y sus límites)
 
 - **Te avisa sola** cuando una sesión *que tú lanzaste* termina un turno o se bloquea (mensaje

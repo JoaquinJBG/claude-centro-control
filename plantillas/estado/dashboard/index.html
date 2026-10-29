@@ -25,6 +25,11 @@
   .cc-groups { display: flex; flex-direction: column; gap: var(--cds-gap-lg); }
   .cc-group { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
   .cc-group h3 { margin: 0; font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); }
+  .cc-tree { display: flex; flex-direction: column; gap: var(--cds-gap-md); }
+  .cc-node { display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
+  .cc-children { display: flex; flex-direction: column; gap: var(--cds-gap-sm); margin-left: var(--cds-pad-md); padding-left: var(--cds-pad-md); border-left: 2px solid var(--color-border-line); }
+  .cc-card.is-jefe { border-color: var(--color-fg-muted); }
+  .cc-crown { display: inline-block; margin-right: var(--cds-gap-xs); padding: 0 var(--cds-pad-xs); border-radius: var(--cds-radius); background: var(--color-bg); border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-weight: var(--cds-font-weight-medium); vertical-align: 0.1em; }
   .cc-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: var(--cds-gap-md); }
   .cc-card { display: flex; flex-direction: column; gap: var(--cds-gap-xs); min-width: 0; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); }
   .cc-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--cds-gap-sm); }
@@ -122,10 +127,13 @@
     document.querySelectorAll('[data-empty="' + name + '"]').forEach((n) => { n.hidden = !isEmpty; });
   };
 
-  const sessionCard = (s) => {
-    const card = el('article', 'cc-card');
+  const sessionCard = (s, esJefe) => {
+    const card = el('article', esJefe ? 'cc-card is-jefe' : 'cc-card');
     const top = el('div', 'cc-card-top');
-    top.append(mark(el('span', 'cc-card-title', s.titulo), 'sesiones', 'titulo', s.id));
+    const titulo = el('span', 'cc-card-title');
+    if (esJefe) titulo.append(el('span', 'cc-crown', 'Jefe'));
+    titulo.append(mark(el('span', null, s.titulo), 'sesiones', 'titulo', s.id));
+    top.append(titulo);
     const chip = el('span', 'cc-chip');
     chip.append(el('span', 'cc-dot is-' + s.estado), document.createTextNode((ESTADOS[s.estado] || {label: s.estado}).label));
     top.append(chip);
@@ -200,11 +208,25 @@
       h.dataset.field = 'proyecto';
       h.dataset.where = 'proyecto=' + enc(proyecto);
       group.append(h);
-      const cards = el('div', 'cc-cards');
-      vivas.filter((s) => s.proyecto === proyecto)
-        .sort((a, b) => ((ESTADOS[a.estado] || {orden: 9}).orden - (ESTADOS[b.estado] || {orden: 9}).orden))
-        .forEach((s) => cards.append(sessionCard(s)));
-      group.append(cards);
+      const delProyecto = vivas.filter((s) => s.proyecto === proyecto);
+      const ids = new Set(delProyecto.map((s) => s.id));
+      const porOrden = (a, b) => ((ESTADOS[a.estado] || {orden: 9}).orden - (ESTADOS[b.estado] || {orden: 9}).orden);
+      const hijasDe = (id) => delProyecto.filter((s) => s.jefe === id).sort(porOrden);
+      const rama = (s, nivel) => {
+        const nodo = el('div', 'cc-node');
+        nodo.append(sessionCard(s, nivel === 0));
+        const hijas = hijasDe(s.id);
+        if (hijas.length && nivel < 6) {
+          const sub = el('div', 'cc-children');
+          hijas.forEach((h) => sub.append(rama(h, nivel + 1)));
+          nodo.append(sub);
+        }
+        return nodo;
+      };
+      const tree = el('div', 'cc-tree');
+      delProyecto.filter((s) => !s.jefe || !ids.has(s.jefe)).sort(porOrden)
+        .forEach((s) => tree.append(rama(s, 0)));
+      group.append(tree);
       node.append(group);
     });
   });

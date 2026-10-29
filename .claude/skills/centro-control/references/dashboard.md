@@ -21,7 +21,8 @@ Si los dos no coinciden, manda `estado/`.
 |---|---|
 | `name` | `fightlab-auth` |
 | `titulo` | `FightLab · refresh tokens` |
-| `proyecto` | `FightLab PRO` |
+| `proyecto` | `FightLab PRO` (las hijas llevan el proyecto de su jefe, para que salgan en su árbol) |
+| `jefe` | sessionId de la sesión padre; vacío si la sesión es el jefe |
 | `objetivo` | `Rotación de refresh tokens JWT` |
 | `estado` | `trabajando` · `te_espera` · `revisar` · `inactiva` · `archivada` |
 | `espera` | `¿Uso refresh tokens rotativos?` (solo si `te_espera`) |
@@ -40,6 +41,7 @@ Si los dos no coinciden, manda `estado/`.
 - Arriba, una fila de contadores: 🟢 trabajando · 🟡 te esperan · ✅ para revisar.
 - Después, "Te esperan", la sección más importante: tarjetas con la pregunta pendiente.
 - Luego, las sesiones agrupadas por proyecto, con un chip de estado, el objetivo, el modelo y la hora de actualización.
+  Dentro de cada proyecto, en árbol: el jefe arriba, con la etiqueta "Jefe", y sus hijas sangradas debajo (y las nietas debajo de ellas).
 - Las archivadas, plegadas al final.
 - En móvil, una sola columna y sin tablas anchas. Debe verse bien en tema claro y oscuro.
 - Solo lectura: la página no envía nada a ninguna sesión.
