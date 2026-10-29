@@ -5,6 +5,12 @@ todas las hijas de un jefe, le informan a su padre y no al Centro. Para que el C
 pasa en cada proyecto, cada jefe recibe este protocolo y desde entonces **le escribe él mismo** con
 `SendMessage`.
 
+## Que no se olvide tras una compactación
+
+El mensaje de abajo surte efecto al momento, pero se puede perder cuando la conversación del jefe se compacta.
+Lo que lo hace permanente es el bloque del `CLAUDE.md` de usuario (`bloque-claude-usuario.md`), que todas las
+sesiones leen siempre. Mantén los dos: el bloque para siempre y el mensaje para los jefes que ya estaban abiertos.
+
 ## Cuándo se envía
 
 - **A cada jefe que registres** (arranque, estado, o un jefe que lances tú): mándale el mensaje de abajo

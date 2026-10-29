@@ -43,6 +43,8 @@ Se hace al empezar cada conversación y después de una compactación.
    Después, `git fetch` y `git status -sb`. Si el kit va por detrás de `origin`, díselo al usuario
    y propón **J** (no hagas pull sin su OK). Si hay carpetas en `biblioteca-skills/` que no están en
    `CATALOGO.md`, revísalas y catalógalas con **H** (pasos 1 y 3).
+   Comprueba también el bloque del Centro en `~/.claude/CLAUDE.md` (`references/bloque-claude-usuario.md`):
+   que exista y lleve tu id actual. Si no, créalo o reescribe solo el bloque.
 2. Lee `pc.md`, `estado/REGISTRO.md`, `estado/PENDIENTES.md`, las últimas ~30 líneas de `estado/BITACORA.md`
    y `proyectos.md`.
 3. `list_sessions` con `limit: 50`, y reconcilia:
