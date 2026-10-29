@@ -106,6 +106,10 @@ si espera algo y la rama/worktree. Máximo 8 líneas.
    modelo sugerido para la hija) y lo envías con **E**, con OK. El jefe crea la hija. Solo sigues con los pasos
    de abajo si el proyecto no tiene jefe o si el usuario pide expresamente que lances tú. En ese caso, la
    sesión que lanzas pasa a ser el jefe del proyecto si no había ninguno.
+   **Límite de la app:** un jefe no puede arrancar una hija a partir de un mensaje tuyo. La deja como
+   **tarjeta** en su sesión, y el usuario tiene que abrir esa sesión y pulsarla. Al enviar el encargo, avísale
+   de que tendrá que hacerlo. Cuando el jefe confirme la tarjeta, ponlo en 🟡 con el nombre de la tarjeta
+   hasta que arranque la hija.
 1. **Concreta el objetivo.** Necesitas proyecto, resultado esperado y criterio de "hecho". Si falta algo
    que no puedes deducir de `proyectos.md`, de la BITACORA o del código, haz **una** pregunta.
 2. **Trocea si hace falta.** Separa en varias sesiones solo las piezas independientes: que no toquen los
