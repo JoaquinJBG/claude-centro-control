@@ -66,6 +66,20 @@ se convirtieron en:
 | colección `pendientes` | archivo `estado/dashboard/pendientes.json` (filas con `id`, `tipo`, `texto`, `sesion`, `creado`; las `responder` primero, porque la primera fila es el "Siguiente paso") → dataset `datasets/pendientes` |
 | `meta/resumen` | lo calcula la propia página (`dash.calc('resumen')`); no hay que escribirlo |
 
+**Fuentes añadidas el 2026-10-29**, a petición del usuario, para enseñar lo que la barra lateral no enseña:
+
+| Archivo → dataset | Filas | Cuándo se actualiza |
+|---|---|---|
+| `proyectos.json` → `proyectos` | `id`, `proyecto`, `jefe` (name), `estado` (como el de la sesión), `trabajando` (n.º de sesiones trabajando), `siguiente` (siguiente paso en una frase), `actualizado` | Cada vez que cambie el estado de un proyecto o su siguiente paso |
+| `fases.json` → `fases` | `id`, `proyecto`, `orden`, `fase` (etiqueta corta: `0`, `1`, `E`…), `nombre`, `estado` (`hecha` · `en_curso` · `pendiente` · `opcional`) | Al empezar o terminar una fase, o cuando un plan nuevo defina las suyas |
+| `ramas.json` → `ramas` | `id`, `proyecto`, `rama`, `commits`, `estado` (`sin_subir` · `sin_remoto` · `en_curso` · `superada`), `nota` | Al verificar commits (D) o cuando el usuario sube o borra una rama (sale de la lista) |
+| `actividad.json` → `actividad` | `id`, `fecha` (ISO), `tipo` (`decision` · `aviso` · `accion`), `proyecto`, `texto` (una frase) | Con cada entrada importante de la BITACORA. Se guardan las **10 últimas** |
+
+**Diseño (versión 2):** contadores (trabajando de 4, te esperan, para revisar y ramas sin subir) · "Te esperan" ·
+"Proyectos": una línea por proyecto con el siguiente paso, y sus sesiones plegadas en árbol jefe → hijas · "Hoja de ruta"
+con chips por fase · "Ramas" · "Para revisar" (incluye lo que está en cola) · "Actividad reciente" · "Archivadas", plegada.
+El usuario pidió que "Sesiones por proyecto" no ocupe tanto, porque la barra lateral ya lo enseña.
+
 - URL: la de la cabecera de `estado/REGISTRO.md`. Cada PC tiene su propio dashboard.
 - **PC nuevo:** la página base es `plantillas/estado/dashboard/index.html`, que en el arranque se copia a
   `estado/dashboard/`. Crea el dashboard igual que en el original (tipo Dashboard, datasets `sesiones` y
@@ -75,9 +89,9 @@ se convirtieron en:
 
 **Sincronizar** (cada vez que cambien `REGISTRO.md` o `PENDIENTES.md`):
 
-1. Reescribe `estado/dashboard/sesiones.json` y/o `pendientes.json`.
+1. Reescribe los JSON de `estado/dashboard/` que hayan cambiado: `sesiones`, `pendientes`, `proyectos`, `fases`, `ramas` o `actividad`.
 2. Súbelos con `Artifact` (`url` del dashboard, `asset: true`, `file_path`): un archivo JSON por llamada.
    Cada subida devuelve una URL nueva `/_blob/<id>`.
-3. Una sola llamada a `ArtifactData` `batch` con `update` de `datasets/sesiones` y/o `datasets/pendientes`:
+3. Una sola llamada a `ArtifactData` `batch` con `update` de los `datasets/<id>` que cambiaron:
    `source.url` = la URL nueva y `updated: {at: <ISO>, by: "Centro de Control"}` (con `if_version`; léelos antes con `get`).
 4. Opcional: borra el asset viejo (`Artifact` `delete` con `url` y `path` = id del asset anterior).

@@ -14,6 +14,7 @@ pon siempre la ruta absoluta, porque la trabajadora trabaja en otra carpeta.
 
 | El usuario dice | Procedimiento |
 |---|---|
+| "buenos días" (o el primer mensaje del día) | **L. Buenos días** |
 | "arranca", "hola", primera frase de la conversación | **A. Arranque** |
 | "estado", "¿cómo va todo?", "¿qué hay?" | **B. Estado** |
 | "¿qué hace X?", "¿en qué quedó X?" | **B'. Detalle de una sesión** |
@@ -244,6 +245,40 @@ Cuando el usuario te pase una skill (texto, archivo, ruta o enlace):
 3. Responde con: ✅ terminado hoy · 🟢 sigue en marcha · 🟡 te espera · ➡️ propuesta para mañana.
 4. Propón mantenimiento (G.3) si hay candidatas a archivar.
 5. Si hay cambios del kit sin subir, propón **J**.
+
+## L. Buenos días
+
+El usuario abre cada día con "buenos días". Quiere un resumen de cómo va todo, qué falta y qué sesiones archivar,
+para que no se acumulen. Es la respuesta más importante del día.
+
+1. Haz **A. Arranque** en silencio: herramientas, `git fetch` del kit, bloque de `~/.claude/CLAUDE.md`, estado,
+   `list_sessions` y reconciliación (incluidas las hijas nuevas que hayan creado los jefes).
+2. Mira la BITACORA desde el último "buenos días" o la última **I. Cierre**: qué terminó, qué decidió el usuario y qué avisos llegaron.
+3. Busca candidatas a archivar con el criterio de **G.3**: hijas terminadas y revisadas, sesiones ⚪ de más de 7 días,
+   sesiones vacías y tareas cerradas (por ejemplo, una publicación ya hecha). Comprueba que no tengan trabajo sin commit.
+   Nunca propongas un jefe de un proyecto vivo, ni este Centro.
+4. Responde en este orden, corto y para el móvil:
+
+```
+☀️ Buenos días. <una frase con lo más importante del día>
+
+🟡 TE ESPERAN (primero siempre)
+1. <proyecto · qué decidir o hacer> → propongo: …
+
+📊 CÓMO VAMOS
+| Proyecto | Estado | Desde ayer | Siguiente paso |
+
+⏳ QUÉ FALTA
+• <por proyecto: fases pendientes, ramas sin subir, revisiones>
+
+🗄️ PARA ARCHIVAR (n)
+1. [sesión](#local_…) · motivo
+→ "¿Archivo 1-n?"
+
+🛠️ Centro: <solo si hay algo: kit por subir, avisos que no llegaron…>
+```
+
+5. Archiva solo lo que el usuario apruebe (una a una, con `reason`), y luego actualiza REGISTRO, BITACORA y dashboard.
 
 ## H'. Qué versión de una skill se usa
 

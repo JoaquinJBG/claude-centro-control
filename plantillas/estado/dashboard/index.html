@@ -1,43 +1,59 @@
 <meta name="dash-one-writer">
 <style>
-  .cc { display: flex; flex-direction: column; gap: var(--cds-gap-xl); max-width: 64rem; margin-inline: auto; font-family: var(--font-anthropic-sans); }
+  .cc { display: flex; flex-direction: column; gap: var(--cds-gap-lg); max-width: 64rem; margin-inline: auto; font-family: var(--font-anthropic-sans); }
   .cc-head { display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
   .cc-title { margin: 0; font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); text-wrap: balance; }
   .cc-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); }
   .cc-take span { color: var(--color-fg); }
-  .cc-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: var(--cds-gap-md); }
-  .cc-count { display: flex; flex-direction: column; gap: var(--cds-gap-xs); background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); }
+  .cc-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 7.5rem), 1fr)); gap: var(--cds-gap-sm); }
+  .cc-count { display: flex; flex-direction: column; gap: 2px; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-sm) var(--cds-pad-md); }
   .cc-count-label { display: flex; align-items: center; gap: var(--cds-gap-xs); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
   .cc .cc-count b { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.1; }
-  .cc-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; flex: none; background: var(--color-fg-muted); }
-  .cc-dot.is-trabajando { background: var(--color-ok); }
+  .cc-count small { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin-left: 4px; }
+  .cc-dot { display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 50%; flex: none; background: var(--color-fg-muted); }
+  .is-trabajando .cc-dot, .cc-dot.is-trabajando, .cc-dot.is-en_curso { background: var(--color-ok); }
   .cc-dot.is-te_espera { background: var(--color-warn); }
-  .cc-dot.is-revisar { background: var(--cds-chart-reference); }
-  .cc-dot.is-archivada { background: var(--color-border-line); }
-  .cc-section { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
+  .cc-dot.is-revisar, .cc-dot.is-sin_subir, .cc-dot.is-sin_remoto { background: var(--cds-chart-reference); }
+  .cc-dot.is-archivada, .cc-dot.is-superada, .cc-dot.is-inactiva { background: var(--color-border-line); }
+  .cc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: var(--cds-gap-lg); align-items: start; }
+  .cc-section { display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
   .cc-section h2 { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
   .cc-note { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
   .cc-list { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
-  .cc-wait-card { display: flex; flex-direction: column; gap: var(--cds-gap-xs); background: var(--color-panel); border: 1px solid var(--color-border-line); border-left: 3px solid var(--color-warn); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); }
-  .cc-review-card { display: flex; flex-direction: column; gap: var(--cds-gap-xs); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-sm) var(--cds-pad-lg); }
+  .cc-wait-card { display: flex; flex-direction: column; gap: 2px; background: var(--color-panel); border: 1px solid var(--color-border-line); border-left: 3px solid var(--color-warn); border-radius: var(--cds-radius); padding: var(--cds-pad-sm) var(--cds-pad-md); }
   .cc-name { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); overflow-wrap: anywhere; }
   .cc-text { margin: 0; font-size: var(--cds-font-size-body); overflow-wrap: anywhere; }
-  .cc-groups { display: flex; flex-direction: column; gap: var(--cds-gap-lg); }
-  .cc-group { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
-  .cc-group h3 { margin: 0; font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); }
-  .cc-tree { display: flex; flex-direction: column; gap: var(--cds-gap-md); }
-  .cc-node { display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
-  .cc-children { display: flex; flex-direction: column; gap: var(--cds-gap-sm); margin-left: var(--cds-pad-md); padding-left: var(--cds-pad-md); border-left: 2px solid var(--color-border-line); }
-  .cc-card.is-jefe { border-color: var(--color-fg-muted); }
-  .cc-crown { display: inline-block; margin-right: var(--cds-gap-xs); padding: 0 var(--cds-pad-xs); border-radius: var(--cds-radius); background: var(--color-bg); border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-weight: var(--cds-font-weight-medium); vertical-align: 0.1em; }
-  .cc-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: var(--cds-gap-md); }
-  .cc-card { display: flex; flex-direction: column; gap: var(--cds-gap-xs); min-width: 0; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); }
-  .cc-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--cds-gap-sm); }
-  .cc-card-title { font-weight: var(--cds-font-weight-medium); overflow-wrap: anywhere; min-width: 0; }
-  .cc-chip { display: inline-flex; align-items: center; gap: var(--cds-gap-xs); flex: none; font-size: var(--cds-font-size-caption); border: 1px solid var(--color-border-line); border-radius: 999px; padding: 0 var(--cds-pad-sm); white-space: nowrap; }
+  .cc-box { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); }
+  .cc-rows { display: flex; flex-direction: column; }
+  .cc-row { display: flex; flex-direction: column; gap: 2px; padding: var(--cds-pad-sm) var(--cds-pad-md); border-top: 1px solid var(--color-border-line); min-width: 0; }
+  .cc-row:first-child { border-top: 0; }
+  .cc-row-top { display: flex; align-items: center; gap: var(--cds-gap-sm); flex-wrap: wrap; }
+  .cc-row-name { font-weight: var(--cds-font-weight-medium); }
+  .cc-chip { display: inline-flex; align-items: center; gap: 4px; font-size: var(--cds-font-size-caption); border: 1px solid var(--color-border-line); border-radius: 999px; padding: 0 var(--cds-pad-sm); white-space: nowrap; color: var(--color-fg-muted); }
   .cc-meta { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .cc-next { margin: 0; font-size: var(--cds-font-size-caption); overflow-wrap: anywhere; }
+  .cc-next::before { content: "→ "; color: var(--color-fg-muted); }
+  .cc-row details summary { cursor: pointer; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+  .cc-sessions { list-style: none; margin: var(--cds-gap-xs) 0 0; padding: 0; display: flex; flex-direction: column; gap: 2px; font-size: var(--cds-font-size-caption); }
+  .cc-sessions li { display: flex; align-items: baseline; gap: var(--cds-gap-xs); min-width: 0; }
+  .cc-sessions li .cc-dot { transform: translateY(-1px); }
+  .cc-sessions li span.t { overflow-wrap: anywhere; }
+  .cc-phases-group { display: flex; flex-direction: column; gap: var(--cds-gap-xs); padding: var(--cds-pad-sm) var(--cds-pad-md); border-top: 1px solid var(--color-border-line); }
+  .cc-phases-group:first-child { border-top: 0; }
+  .cc-phases { display: flex; flex-wrap: wrap; gap: 4px; }
+  .cc-phase { display: inline-flex; align-items: center; gap: 4px; font-size: var(--cds-font-size-caption); border-radius: var(--cds-radius); padding: 1px var(--cds-pad-xs); border: 1px solid var(--color-border-line); color: var(--color-fg-muted); }
+  .cc-phase b { font-variant-numeric: tabular-nums; }
+  .cc-phase.is-hecha { color: var(--color-ok); border-color: var(--color-ok); }
+  .cc-phase.is-en_curso { color: var(--color-fg); border-color: var(--color-warn); background: var(--color-bg); }
+  .cc-phase.is-opcional { border-style: dashed; }
+  .cc-legend { display: flex; gap: var(--cds-gap-sm); flex-wrap: wrap; }
+  .cc-branch { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: var(--cds-font-size-caption); overflow-wrap: anywhere; }
+  .cc-act { display: grid; grid-template-columns: auto 1fr; gap: 2px var(--cds-gap-sm); padding: var(--cds-pad-xs) var(--cds-pad-md); border-top: 1px solid var(--color-border-line); font-size: var(--cds-font-size-caption); }
+  .cc-act:first-child { border-top: 0; }
+  .cc-act time { color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+  .cc-act .k { font-weight: var(--cds-font-weight-medium); }
+  .cc-act.is-decision .k { color: var(--color-warn); }
   .cc-archived summary { cursor: pointer; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); }
-  .cc-archived[open] summary { margin-bottom: var(--cds-gap-sm); }
   [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
   [data-dash-source-state=empty] { color: transparent; }
 </style>
@@ -51,50 +67,84 @@
   <div class="cc-counts">
     <div class="cc-count">
       <span class="cc-count-label"><span class="cc-dot is-trabajando"></span>Trabajando</span>
-      <b class="dash-skeleton" data-draw="n" data-source="resumen" data-field="n" data-where="estado=trabajando">—</b>
+      <span><b class="dash-skeleton" data-draw="n" data-source="resumen" data-field="n" data-where="k=trabajando">—</b><small data-draw="limite">—</small></span>
     </div>
     <div class="cc-count">
       <span class="cc-count-label"><span class="cc-dot is-te_espera"></span>Te esperan</span>
-      <b class="dash-skeleton" data-draw="n" data-source="resumen" data-field="n" data-where="estado=te_espera">—</b>
+      <b class="dash-skeleton" data-draw="n" data-source="resumen" data-field="n" data-where="k=te_espera">—</b>
     </div>
     <div class="cc-count">
       <span class="cc-count-label"><span class="cc-dot is-revisar"></span>Para revisar</span>
-      <b class="dash-skeleton" data-draw="n" data-source="resumen" data-field="n" data-where="estado=revisar">—</b>
+      <b class="dash-skeleton" data-draw="n" data-source="resumen" data-field="n" data-where="k=revisar">—</b>
+    </div>
+    <div class="cc-count">
+      <span class="cc-count-label"><span class="cc-dot is-sin_subir"></span>Ramas sin subir</span>
+      <b class="dash-skeleton" data-draw="n" data-source="resumen" data-field="n" data-where="k=ramas">—</b>
     </div>
   </div>
 
   <section class="cc-section" id="te-esperan">
     <h2>Te esperan</h2>
-    <p class="cc-note">Lo que necesita una respuesta o una acción tuya. Se responde desde el chat del Centro de Control.</p>
     <div class="cc-list" data-draw="espera" data-source="pendientes sesiones"></div>
     <p class="cc-note" data-empty="espera" hidden>Nadie te espera ahora mismo.</p>
   </section>
 
-  <section class="cc-section" id="para-revisar">
-    <h2>Para revisar</h2>
-    <div class="cc-list" data-draw="revisar" data-source="pendientes"></div>
-    <p class="cc-note" data-empty="revisar" hidden>No hay nada pendiente de revisión.</p>
-  </section>
+  <div class="cc-grid">
+    <section class="cc-section" id="proyectos">
+      <h2>Proyectos</h2>
+      <p class="cc-note">Una línea por proyecto con su jefe y el siguiente paso. Las sesiones van plegadas.</p>
+      <div class="cc-box cc-rows" data-draw="proyectos" data-source="proyectos sesiones"></div>
+    </section>
 
-  <section class="cc-section" id="sesiones">
-    <h2>Sesiones por proyecto</h2>
-    <div class="cc-groups" data-draw="proyectos" data-source="sesiones"></div>
-  </section>
+    <section class="cc-section" id="fases">
+      <h2>Hoja de ruta</h2>
+      <div class="cc-legend cc-note">
+        <span class="cc-phase is-hecha">Hecha</span>
+        <span class="cc-phase is-en_curso">En curso</span>
+        <span class="cc-phase">Pendiente</span>
+        <span class="cc-phase is-opcional">Opcional</span>
+      </div>
+      <div class="cc-box" data-draw="fases" data-source="fases"></div>
+    </section>
+
+    <section class="cc-section" id="ramas">
+      <h2>Ramas</h2>
+      <p class="cc-note">Trabajo en local que todavía no está en GitHub. El push lo haces tú.</p>
+      <div class="cc-box cc-rows" data-draw="ramas" data-source="ramas"></div>
+    </section>
+
+    <section class="cc-section" id="para-revisar">
+      <h2>Para revisar</h2>
+      <div class="cc-box cc-rows" data-draw="revisar" data-source="pendientes"></div>
+      <p class="cc-note" data-empty="revisar" hidden>No hay nada pendiente de revisión.</p>
+    </section>
+
+    <section class="cc-section" id="actividad">
+      <h2>Actividad reciente</h2>
+      <div class="cc-box" data-draw="actividad" data-source="actividad"></div>
+    </section>
+  </div>
 
   <details class="cc-archived" id="archivadas">
     <summary>Archivadas</summary>
-    <div class="cc-cards" data-draw="archivadas" data-source="sesiones"></div>
+    <div class="cc-box cc-rows" data-draw="archivadas" data-source="sesiones"></div>
     <p class="cc-note" data-empty="archivadas" hidden>Todavía no hay sesiones archivadas.</p>
   </details>
 </div>
 
 <script>
+  const LIMITE_SESIONES = 4;
+
   dash.calc('resumen', {
-    inputs: ['sesiones'],
-    title: 'Sesiones por estado',
-    description: 'Cuenta cuántas sesiones hay en cada estado.',
-    fn: (sesiones) => ['trabajando', 'te_espera', 'revisar', 'inactiva', 'archivada']
-      .map((estado) => ({estado, n: sesiones.filter((s) => s.estado === estado).length})),
+    inputs: ['sesiones', 'pendientes', 'ramas'],
+    title: 'Recuentos del Centro',
+    description: 'Sesiones trabajando, pendientes por tipo y ramas con trabajo sin subir.',
+    fn: (sesiones, pendientes, ramas) => [
+      {k: 'trabajando', n: sesiones.filter((s) => s.estado === 'trabajando').length},
+      {k: 'te_espera', n: pendientes.filter((p) => p.tipo === 'responder').length},
+      {k: 'revisar', n: pendientes.filter((p) => p.tipo === 'revisar').length},
+      {k: 'ramas', n: ramas.filter((r) => r.estado === 'sin_subir' || r.estado === 'sin_remoto').length},
+    ],
   });
 
   const ESTADOS = {
@@ -104,7 +154,9 @@
     inactiva: {label: 'Inactiva', orden: 3},
     archivada: {label: 'Archivada', orden: 4},
   };
-  const fecha = new Intl.DateTimeFormat('es-ES', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'});
+  const RAMAS = {sin_subir: 'Sin subir', sin_remoto: 'Sin remoto', en_curso: 'En curso', superada: 'Superada'};
+  const TIPOS = {decision: 'Decisión', aviso: 'Aviso', accion: 'Acción'};
+  const hora = new Intl.DateTimeFormat('es-ES', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'});
   const enc = (v) => encodeURIComponent(String(v));
 
   const mark = (node, source, field, id) => {
@@ -126,30 +178,10 @@
   const setEmpty = (name, isEmpty) => {
     document.querySelectorAll('[data-empty="' + name + '"]').forEach((n) => { n.hidden = !isEmpty; });
   };
-
-  const sessionCard = (s, esJefe) => {
-    const card = el('article', esJefe ? 'cc-card is-jefe' : 'cc-card');
-    const top = el('div', 'cc-card-top');
-    const titulo = el('span', 'cc-card-title');
-    if (esJefe) titulo.append(el('span', 'cc-crown', 'Jefe'));
-    titulo.append(mark(el('span', null, s.titulo), 'sesiones', 'titulo', s.id));
-    top.append(titulo);
-    const chip = el('span', 'cc-chip');
-    chip.append(el('span', 'cc-dot is-' + s.estado), document.createTextNode((ESTADOS[s.estado] || {label: s.estado}).label));
-    top.append(chip);
-    card.append(top);
-    card.append(mark(el('span', 'cc-name', s.name), 'sesiones', 'name', s.id));
-    card.append(mark(el('p', 'cc-text', s.objetivo), 'sesiones', 'objetivo', s.id));
-    const meta = el('span', 'cc-meta');
-    meta.append(mark(el('span', null, s.modelo), 'sesiones', 'modelo', s.id));
-    if (s.rama) {
-      meta.append(document.createTextNode(' · '));
-      meta.append(mark(el('span', null, s.rama), 'sesiones', 'rama', s.id));
-    }
-    const t = new Date(s.actualizado);
-    if (!isNaN(t)) meta.append(document.createTextNode(' · ' + fecha.format(t)));
-    card.append(meta);
-    return card;
+  const chip = (estado, label) => {
+    const c = el('span', 'cc-chip');
+    c.append(el('span', 'cc-dot is-' + estado), document.createTextNode(label));
+    return c;
   };
 
   dash.draw('siguiente', (node) => {
@@ -158,11 +190,15 @@
     node.textContent = rows && rows.length ? rows[0].texto : '—';
   });
 
+  dash.draw('limite', (node) => {
+    node.textContent = 'de ' + LIMITE_SESIONES;
+  });
+
   dash.draw('n', (node) => {
     const rows = rowsOf('resumen');
     node.classList.toggle('dash-skeleton', rows === null);
-    const estado = new URLSearchParams(node.dataset.where).get('estado');
-    const row = rows && rows.find((r) => r.estado === estado);
+    const k = new URLSearchParams(node.dataset.where).get('k');
+    const row = rows && rows.find((r) => r.k === k);
     node.textContent = row ? String(row.n) : '—';
   });
 
@@ -182,52 +218,121 @@
     });
   });
 
+  dash.draw('proyectos', (node) => {
+    const proys = rowsOf('proyectos');
+    const ses = (rowsOf('sesiones') || []).filter((s) => s.estado !== 'archivada');
+    node.replaceChildren();
+    if (proys === null) return;
+    const porOrden = (a, b) => ((ESTADOS[a.estado] || {orden: 9}).orden - (ESTADOS[b.estado] || {orden: 9}).orden);
+    proys.forEach((p) => {
+      const row = el('article', 'cc-row');
+      const top = el('div', 'cc-row-top');
+      top.append(mark(el('span', 'cc-row-name', p.proyecto), 'proyectos', 'proyecto', p.id));
+      top.append(chip(p.estado, (ESTADOS[p.estado] || {label: p.estado}).label));
+      if (p.trabajando > 0) {
+        const t = el('span', 'cc-meta');
+        t.append(mark(el('span', null, String(p.trabajando)), 'proyectos', 'trabajando', p.id), document.createTextNode(' trabajando'));
+        top.append(t);
+      }
+      row.append(top);
+      row.append(mark(el('p', 'cc-next', p.siguiente), 'proyectos', 'siguiente', p.id));
+
+      const delProyecto = ses.filter((s) => s.proyecto === p.proyecto);
+      if (delProyecto.length) {
+        const ids = new Set(delProyecto.map((s) => s.id));
+        const det = el('details');
+        det.append(el('summary', null, delProyecto.length === 1 ? '1 sesión' : delProyecto.length + ' sesiones'));
+        const ul = el('ul', 'cc-sessions');
+        const add = (s, nivel) => {
+          const li = el('li');
+          li.style.paddingLeft = (nivel * 14) + 'px';
+          if (nivel > 0) li.append(el('span', 'cc-meta', '↳'));
+          li.append(el('span', 'cc-dot is-' + s.estado));
+          li.append(mark(el('span', 't', s.titulo), 'sesiones', 'titulo', s.id));
+          li.append(mark(el('span', 'cc-meta', s.modelo), 'sesiones', 'modelo', s.id));
+          ul.append(li);
+          if (nivel < 6) delProyecto.filter((h) => h.jefe === s.id).sort(porOrden).forEach((h) => add(h, nivel + 1));
+        };
+        delProyecto.filter((s) => !s.jefe || !ids.has(s.jefe)).sort(porOrden).forEach((s) => add(s, 0));
+        det.append(ul);
+        row.append(det);
+      }
+      node.append(row);
+    });
+  });
+
+  dash.draw('fases', (node) => {
+    const fases = rowsOf('fases');
+    node.replaceChildren();
+    if (fases === null) return;
+    const proyectos = [...new Set(fases.map((f) => f.proyecto))];
+    proyectos.forEach((proyecto) => {
+      const g = el('div', 'cc-phases-group');
+      const h = el('span', 'cc-row-name', proyecto);
+      h.dataset.source = 'fases';
+      h.dataset.field = 'proyecto';
+      h.dataset.where = 'proyecto=' + enc(proyecto);
+      g.append(h);
+      const wrap = el('div', 'cc-phases');
+      fases.filter((f) => f.proyecto === proyecto).sort((a, b) => a.orden - b.orden).forEach((f) => {
+        const c = el('span', 'cc-phase is-' + f.estado);
+        c.append(mark(el('b', null, f.fase), 'fases', 'fase', f.id));
+        c.append(mark(el('span', null, f.nombre), 'fases', 'nombre', f.id));
+        wrap.append(c);
+      });
+      g.append(wrap);
+      node.append(g);
+    });
+  });
+
+  dash.draw('ramas', (node) => {
+    const ramas = rowsOf('ramas');
+    node.replaceChildren();
+    if (ramas === null) return;
+    ramas.forEach((r) => {
+      const row = el('div', 'cc-row');
+      const top = el('div', 'cc-row-top');
+      top.append(mark(el('span', 'cc-row-name', r.proyecto), 'ramas', 'proyecto', r.id));
+      top.append(chip(r.estado, RAMAS[r.estado] || r.estado));
+      const c = el('span', 'cc-meta');
+      c.append(mark(el('span', null, String(r.commits)), 'ramas', 'commits', r.id), document.createTextNode(r.commits === 1 ? ' commit' : ' commits'));
+      top.append(c);
+      row.append(top);
+      row.append(mark(el('span', 'cc-branch', r.rama), 'ramas', 'rama', r.id));
+      row.append(mark(el('span', 'cc-meta', r.nota), 'ramas', 'nota', r.id));
+      node.append(row);
+    });
+  });
+
   dash.draw('revisar', (node) => {
     const pend = rowsOf('pendientes');
     node.replaceChildren();
     if (pend === null) { setEmpty('revisar', false); return; }
-    const items = pend.filter((p) => p.tipo === 'revisar');
+    const items = pend.filter((p) => p.tipo === 'revisar' || p.tipo === 'en_cola');
     setEmpty('revisar', items.length === 0);
     items.forEach((p) => {
-      const card = el('article', 'cc-review-card');
-      card.append(mark(el('p', 'cc-text', p.texto), 'pendientes', 'texto', p.id));
-      node.append(card);
+      const row = el('div', 'cc-row');
+      if (p.tipo === 'en_cola') row.append(el('span', 'cc-meta', 'En cola'));
+      row.append(mark(el('p', 'cc-text', p.texto), 'pendientes', 'texto', p.id));
+      node.append(row);
     });
   });
 
-  dash.draw('proyectos', (node) => {
-    const ses = rowsOf('sesiones');
+  dash.draw('actividad', (node) => {
+    const act = rowsOf('actividad');
     node.replaceChildren();
-    if (ses === null) return;
-    const vivas = ses.filter((s) => s.estado !== 'archivada');
-    const proyectos = [...new Set(vivas.map((s) => s.proyecto))];
-    proyectos.forEach((proyecto) => {
-      const group = el('div', 'cc-group');
-      const h = el('h3', null, proyecto);
-      h.dataset.source = 'sesiones';
-      h.dataset.field = 'proyecto';
-      h.dataset.where = 'proyecto=' + enc(proyecto);
-      group.append(h);
-      const delProyecto = vivas.filter((s) => s.proyecto === proyecto);
-      const ids = new Set(delProyecto.map((s) => s.id));
-      const porOrden = (a, b) => ((ESTADOS[a.estado] || {orden: 9}).orden - (ESTADOS[b.estado] || {orden: 9}).orden);
-      const hijasDe = (id) => delProyecto.filter((s) => s.jefe === id).sort(porOrden);
-      const rama = (s, nivel) => {
-        const nodo = el('div', 'cc-node');
-        nodo.append(sessionCard(s, nivel === 0));
-        const hijas = hijasDe(s.id);
-        if (hijas.length && nivel < 6) {
-          const sub = el('div', 'cc-children');
-          hijas.forEach((h) => sub.append(rama(h, nivel + 1)));
-          nodo.append(sub);
-        }
-        return nodo;
-      };
-      const tree = el('div', 'cc-tree');
-      delProyecto.filter((s) => !s.jefe || !ids.has(s.jefe)).sort(porOrden)
-        .forEach((s) => tree.append(rama(s, 0)));
-      group.append(tree);
-      node.append(group);
+    if (act === null) return;
+    act.slice().sort((a, b) => String(b.fecha).localeCompare(String(a.fecha))).forEach((a) => {
+      const row = el('div', 'cc-act is-' + a.tipo);
+      const t = new Date(a.fecha);
+      row.append(el('time', null, isNaN(t) ? '' : hora.format(t)));
+      const txt = el('span');
+      txt.append(el('span', 'k', (TIPOS[a.tipo] || a.tipo) + ' · '));
+      txt.append(mark(el('span', null, a.proyecto), 'actividad', 'proyecto', a.id));
+      txt.append(document.createTextNode(': '));
+      txt.append(mark(el('span', null, a.texto), 'actividad', 'texto', a.id));
+      row.append(txt);
+      node.append(row);
     });
   });
 
@@ -237,6 +342,11 @@
     if (ses === null) { setEmpty('archivadas', false); return; }
     const arch = ses.filter((s) => s.estado === 'archivada');
     setEmpty('archivadas', arch.length === 0);
-    arch.forEach((s) => node.append(sessionCard(s)));
+    arch.forEach((s) => {
+      const row = el('div', 'cc-row');
+      row.append(mark(el('span', null, s.titulo), 'sesiones', 'titulo', s.id));
+      row.append(mark(el('span', 'cc-meta', s.objetivo), 'sesiones', 'objetivo', s.id));
+      node.append(row);
+    });
   });
 </script>
