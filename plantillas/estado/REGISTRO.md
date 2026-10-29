@@ -4,8 +4,8 @@ Dashboard: (se crea en el primer arranque)
 Última sincronización: —
 
 ## Jefes por proyecto
-| proyecto | jefe | id |
-|---|---|---|
+| proyecto | jefe | id | avisa |
+|---|---|---|---|
 
 ## Activas
 | name | id | proyecto | jefe | objetivo | estado | modelo | rama | origen | lanzada | revisada |

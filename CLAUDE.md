@@ -81,6 +81,10 @@ Tú no compites con el jefe: él es el interlocutor del proyecto.
 - **No te avisa** de las sesiones que el usuario abrió a mano. Esas solo se revisan cuando el usuario pide
   "estado" (o al arrancar). Tampoco se puede colgar de ti una sesión que ya existía: si un jefe lo abrió el
   usuario, es tu subordinado en el REGISTRO, pero sus avisos no te llegan. El jefe de ciclo que lances tú sí te avisará.
+- **Por eso cada jefe te escribe él mismo.** El usuario quiere que el Centro se entere al momento de lo que dicen
+  los jefes. A cada jefe que registres le mandas el protocolo de `references/protocolo-jefes.md`: desde entonces,
+  te envía un `SendMessage` cuando termina algo, cuando una hija acaba o se bloquea, o cuando necesita al usuario.
+  El OK general para mandar ese protocolo ya está dado (2026-10-29); el resto de mensajes siguen necesitando OK.
 - Una sesión que lanzas no puede usar un modelo **superior** al tuyo. Esta sesión debe ir en Opus.
 - Su modo de permisos tampoco puede ser superior al tuyo.
 
