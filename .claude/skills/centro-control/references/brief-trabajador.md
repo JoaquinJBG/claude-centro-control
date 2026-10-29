@@ -26,10 +26,13 @@ visto nada: debe tener ≥80 caracteres.
 - [ ] Hay commits en tu rama con mensajes claros
 
 ## Skills
-<"Antes de empezar, lee entero y sigue `…\biblioteca-skills\<nombre>\SKILL.md`", o "ninguna".>
+<"Antes de empezar, lee entero y sigue `…\biblioteca-skills\<nombre>\SKILL.md`", o "usa la skill `<nombre>`"
+si en este PC manda la versión propia (`pc.md`), o "ninguna".>
 
 ## Reglas
-- Trabajas en tu propio worktree. Puedes hacer commits. **No hagas push, ni abras PR, ni hagas merge.**
+- Trabajas en tu propio worktree. Puedes hacer commits. <Según `pc.md`, una de dos:
+  "**No hagas push, ni abras PR/MR, ni hagas merge.**" o "Puedes hacer push y abrir la PR/MR en borrador
+  siguiendo `ticket-flow`; pide OK antes de marcarla lista para revisión. **Nunca hagas merge.**">
 - No toques nada fuera de "Dónde" sin preguntar.
 - Si te falta una decisión que no puedes deducir del código, **pregunta y para**. No lo resuelvas
   por tu cuenta en temas de producto, datos o seguridad.

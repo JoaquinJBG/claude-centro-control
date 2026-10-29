@@ -2,6 +2,7 @@
 # En un PC nuevo se crea desde plantillas/ en el primer arranque.
 /estado/
 /proyectos.md
+/pc.md
 
 # Ajustes locales de Claude Code
 .claude/settings.local.json

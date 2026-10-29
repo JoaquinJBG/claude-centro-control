@@ -31,11 +31,13 @@ Una sesión de Claude Code que hace de **orquestador** de todas las demás. Tú 
 | `.claude/skills/centro-control/references/dashboard.md` | Especificación del dashboard |
 | `INICIO.md` | Primer mensaje para pegar al crear la sesión |
 | `estado/` | Registro de sesiones, pendientes y bitácora de acciones y decisiones |
+| `pc.md` | **Ámbito de este PC:** rol (personal/trabajo), qué queda fuera, si las trabajadoras pueden abrir PR/MR, skills propias que mandan y jefes de ciclo (sprints) |
 | `proyectos.md` | Catálogo de proyectos (ruta, git, stack) del que salen las carpetas de lanzamiento |
 | `biblioteca-skills/` | Skills que le vayas dando para asignarlas a las trabajadoras (se comparten entre PCs) |
 | `plantillas/` | `estado/`, `proyectos.md` y la página del dashboard vacíos, para un PC nuevo |
 
-`estado/` y `proyectos.md` **no se suben** (`.gitignore`): son de cada PC.
+`estado/`, `pc.md` y `proyectos.md` **no se suben** (`.gitignore`): son de cada PC. Así el mismo kit sirve
+para un centro en el PC del trabajo (proyectos del trabajo, con PR/MR) y otro en el personal.
 
 ## Instalación en un PC
 
@@ -52,8 +54,8 @@ Una sesión de Claude Code que hace de **orquestador** de todas las demás. Tú 
 4. **Modo de permisos: Auto** (recomendado). Las trabajadoras heredan como máximo el modo del centro;
    en *default* te llegarían muchas peticiones de permiso desde todas ellas. Las reglas de "pide OK antes
    de…" están en `CLAUDE.md` y se aplican igual en cualquier modo.
-5. Pega el mensaje de `INICIO.md`. Creará el `estado/` y el `proyectos.md` de ese PC a partir de
-   `plantillas/`, hará el inventario, creará los grupos y el dashboard, y te dará el estado.
+5. Pega el mensaje de `INICIO.md`. Creará el `estado/`, el `pc.md` y el `proyectos.md` de ese PC a partir de
+   `plantillas/` (te preguntará el rol del PC y qué queda fuera de ámbito), hará el inventario, creará los grupos y el dashboard, y te dará el estado.
 6. Cuando cree el dashboard, fíjalo (*pin*) en la barra lateral de claude.ai si quieres tenerlo a mano en el móvil.
 
 ## Uso diario
@@ -68,6 +70,8 @@ Una sesión de Claude Code que hace de **orquestador** de todas las demás. Tú 
 | `dile a X que…` / `pásale a Y lo de X` | Redacta el mensaje, te lo enseña y lo envía con tu OK |
 | `limpia` | Ordena los grupos y te propone qué archivar |
 | `guarda esta skill: …` | La revisa, la guarda en la biblioteca y la cataloga |
+| `instala las skills` | Copia las de la biblioteca a `~/.claude/skills` para que las uses tú con `/nombre` (sin pisar las propias del PC) |
+| `cierra el sprint` | Cierra el ciclo del jefe de sprint, propone qué pasa al siguiente y lanza el nuevo jefe |
 | `cierre` | Resumen del día en la bitácora y propuesta para mañana |
 
 **No hace falta vigilar:** cuando una sesión que lanzó él termina o se bloquea, la app lo despierta
@@ -77,7 +81,8 @@ solo y te avisa.
 
 - **Hace solo:** mirar, leer, resumir, apuntar, ordenar la barra lateral, proponer.
 - **Te pide OK:** lanzar (decirle "lanza X" ya es el OK), enviar mensajes, parar, archivar, cambiar modelos o permisos.
-- **Nunca:** borrar sesiones, hacer push, abrir PR o hacer merge, aprobar en tu nombre, tocar trabajo.
+- **Nunca:** borrar sesiones, hacer merge, hacer push o abrir PR/MR él mismo, aprobar en tu nombre, tocar lo que `pc.md` pone fuera de ámbito.
+- **Push y PR/MR de las trabajadoras:** según `pc.md`. Si se permiten, en borrador y con `ticket-flow`; marcarlas listas, con tu OK.
 
 ## Añadir cosas
 
@@ -106,6 +111,7 @@ solo y te avisa.
   ```
 
   En el PC personal, dile al centro "baja las skills": hará `git pull`, las revisará y las añadirá al catálogo.
+  Luego "instala las skills" para poder usarlas tú directamente.
   Antes de subirlas, quita cualquier dato del trabajo (clientes, URLs internas, tokens), aunque el repo sea privado.
 - **Una decisión permanente:** "apunta como decisión: en FightLab siempre…". Queda como `[DECISIÓN]` en la
   bitácora y la usará para proponerte respuestas.

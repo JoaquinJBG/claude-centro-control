@@ -25,6 +25,8 @@ pon siempre la ruta absoluta, porque la trabajadora trabaja en otra carpeta.
 | "guarda esta skill", "toma esta skill" | **H. Biblioteca de skills** |
 | "cierre", "resumen del día" | **I. Cierre** |
 | "actualiza el kit", "sube los cambios", "baja las skills" | **J. Kit en GitHub** |
+| "instala las skills", "pon las skills en este PC" | **K. Instalar skills en este PC** |
+| "cierra el sprint", "nuevo sprint", "cambia de ciclo" | **L. Cambio de ciclo** |
 
 ---
 
@@ -32,21 +34,29 @@ pon siempre la ruta absoluta, porque la trabajadora trabaja en otra carpeta.
 
 Se hace al empezar cada conversación y después de una compactación.
 
-0. **PC nuevo:** si no existen `estado/` o `proyectos.md`, cópialos desde `plantillas/`
-   (`plantillas/estado/` → `estado/` y `plantillas/proyectos.md` → `proyectos.md`). Están en `.gitignore`:
-   cada PC tiene los suyos.
+0. **PC nuevo:** si no existen `estado/`, `pc.md` o `proyectos.md`, cópialos desde `plantillas/`
+   (`plantillas/estado/` → `estado/`, `plantillas/pc.md` → `pc.md` y `plantillas/proyectos.md` → `proyectos.md`).
+   Están en `.gitignore`: cada PC tiene los suyos. Si `pc.md` acaba de crearse, pregunta al usuario su rol
+   (personal o trabajo), qué queda fuera de ámbito y si las trabajadoras pueden hacer push y abrir PR/MR, todo
+   en un solo mensaje, y rellénalo antes de seguir.
 1. Carga las herramientas con el `ToolSearch` de `CLAUDE.md` (una sola llamada).
    Después, `git fetch` y `git status -sb`. Si el kit va por detrás de `origin`, díselo al usuario
    y propón **J** (no hagas pull sin su OK). Si hay carpetas en `biblioteca-skills/` que no están en
    `CATALOGO.md`, revísalas y catalógalas con **H** (pasos 1 y 3).
-2. Lee `estado/REGISTRO.md`, `estado/PENDIENTES.md`, las últimas ~30 líneas de `estado/BITACORA.md` y `proyectos.md`.
+2. Lee `pc.md`, `estado/REGISTRO.md`, `estado/PENDIENTES.md`, las últimas ~30 líneas de `estado/BITACORA.md`
+   y `proyectos.md`.
 3. `list_sessions` con `limit: 50`, y reconcilia:
    - una sesión que no está en el REGISTRO → añádela con origen `externa`, el estado deducido y su **jefe**
      (`startedBy`; si no lo trae, `get_session` → `parentSessionId`). Sin padre, es jefe de su proyecto;
      si un proyecto acaba con dos jefes, pregunta al usuario cuál es el bueno;
    - los jefes crean hijas por su cuenta: en cada arranque y en cada B aparecen hijas nuevas, regístralas igual;
    - una sesión del REGISTRO que ya no aparece → márcala `📦 archivada` (compruébalo con `include_archived: true`);
-   - una carpeta de trabajo que no está en `proyectos.md` → añádela como proyecto `(por completar)`.
+   - una carpeta de trabajo que no está en `proyectos.md` → añádela como proyecto `(por completar)`;
+   - una sesión de una carpeta fuera de ámbito (`pc.md`) → regístrala como `fuera de ámbito` y no hagas nada más con ella;
+   - un **jefe de ciclo** de `pc.md` → regístralo como jefe (`👑`) de cada proyecto que cubre; sus hijas cuelgan de él
+     aunque trabajen en otro repo.
+3b. **Fin de ciclo:** si hoy es el último día de un ciclo de `pc.md` o ya ha pasado, añade a `PENDIENTES.md` (Te espera)
+   "cerrar el ciclo X y abrir el siguiente" y propónlo en el estado (ver **L**).
 4. **Primera vez:** si el REGISTRO no tiene URL de dashboard, créalo (ver `references/dashboard.md`).
    Si no existen los grupos de la barra lateral por proyecto, créalos (G.1). Fija esta sesión (`set_pinned` sobre `self`).
 5. Sincroniza el dashboard.
@@ -223,6 +233,12 @@ Cuando el usuario te pase una skill (texto, archivo, ruta o enlace):
 4. Propón mantenimiento (G.3) si hay candidatas a archivar.
 5. Si hay cambios del kit sin subir, propón **J**.
 
+## H'. Qué versión de una skill se usa
+
+En `pc.md` está la lista de **skills propias de este PC** (en `~/.claude/skills`). Si una skill de esa lista tiene
+el mismo nombre que una de `biblioteca-skills/`, en este PC manda la propia: en el brief pon
+"usa la skill `<nombre>`" (la trabajadora la tiene instalada), no la ruta de la biblioteca.
+
 ## J. Kit en GitHub
 
 La carpeta del centro es un repo git privado (`origin` = el repo `claude-centro-control` del usuario).
@@ -236,6 +252,32 @@ Se versiona **el kit**: `CLAUDE.md`, la skill, `plantillas/`, `biblioteca-skills
   `proyectos.md`, haz un commit con un mensaje claro en español y `git push`.
 - **Antes de subir una skill**, revisa que no lleve secretos (tokens, contraseñas, URLs internas o datos de clientes).
   Si los lleva, avisa y no la subas hasta que el usuario decida.
+- Después de **bajar** skills nuevas o cambiadas, propón **K** para que el usuario también pueda invocarlas a mano.
+
+## K. Instalar skills en este PC
+
+Las skills de `biblioteca-skills/` sirven a las trabajadoras a través del brief. Para que el usuario las pueda
+invocar él mismo (`/ticket-flow`) en cualquier sesión, tienen que estar en `~/.claude/skills/`.
+
+1. Para cada carpeta de `biblioteca-skills/` (menos `CATALOGO.md`), mira si existe `~/.claude/skills/<nombre>/`.
+2. Si **no existe**, cópiala entera. Si **existe** y está en la lista de skills propias de `pc.md`, **no la toques**.
+   Si existe y no está en esa lista, enseña el `diff` y pregunta antes de sobrescribirla.
+3. Con OK del usuario (una sola pregunta para todas). Dile que las skills nuevas se cargan en las sesiones que
+   se abran a partir de ahora.
+4. Apúntalo en la BITACORA.
+
+## L. Cambio de ciclo (jefes de ciclo)
+
+Un ciclo de `pc.md` (un sprint, por ejemplo) tiene un jefe que cubre varios proyectos hasta una fecha.
+
+1. **Antes de cerrar:** haz B'. Detalle del jefe del ciclo y de sus hijas. Lista lo que queda abierto: hijas
+   trabajando o esperando, ramas sin PR/MR, PR/MR abiertas.
+2. Propón al usuario, en un solo mensaje: qué pasa al ciclo siguiente, qué hijas archivar (G.3) y el brief del
+   nuevo jefe. Ese brief incluye el resumen de lo que queda abierto, las fechas del ciclo nuevo y el plan del
+   ciclo, si el usuario lo da (un enlace, un artifact o un documento).
+3. Con OK, **lanza tú el nuevo jefe** (C.9, con `use_worktree: false` y la misma carpeta que el jefe anterior, salvo que el usuario diga otra). Así el jefe
+   es hijo tuyo y sus avisos te llegan. Archiva el jefe anterior solo cuando el usuario lo diga.
+4. Actualiza la tabla de ciclos de `pc.md` (fila nueva con el nuevo id y fechas), el REGISTRO y la BITACORA.
 
 ---
 
