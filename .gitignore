@@ -1,0 +1,7 @@
+# Estado de cada PC: ids de sesión, rutas locales y URL del dashboard.
+# En un PC nuevo se crea desde plantillas/ en el primer arranque.
+/estado/
+/proyectos.md
+
+# Ajustes locales de Claude Code
+.claude/settings.local.json

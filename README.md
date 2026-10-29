@@ -1,0 +1,129 @@
+# 🛰️ Centro de Control
+
+Una sesión de Claude Code que hace de **orquestador** de todas las demás. Tú le hablas a ella y ella:
+
+- **supervisa** qué hace cada sesión y te da el estado en un vistazo;
+- **lanza** sesiones nuevas con un brief bien escrito, en el proyecto, el modelo y el worktree adecuados;
+- **desbloquea**: te dice quién te espera y te propone la respuesta;
+- **coordina**: pasa información de una sesión a otra;
+- **mantiene** todo en orden: grupos en la barra lateral, títulos y archivado de lo terminado;
+- **recuerda** todo en archivos (`estado/`) y lo muestra en un dashboard que puedes ver en el móvil.
+
+```
+               Tú (PC o móvil)
+                     │
+            ┌────────▼────────┐        estado/  (fuente de verdad)
+            │ Centro de Control│◄──────►REGISTRO · PENDIENTES · BITÁCORA
+            │    (Opus)       │──────► Dashboard (claude.ai, solo lectura)
+            └─┬──────┬──────┬─┘
+     lanza/   │      │      │   avisos automáticos al terminar o bloquearse
+    mensajes  ▼      ▼      ▼   (solo de las sesiones que lanzó él)
+        fightlab-x  coach-y  android-z    ← trabajadoras, cada una en su worktree
+```
+
+## Estructura
+
+| Ruta | Qué es |
+|---|---|
+| `CLAUDE.md` | **El prompt de la sesión.** Se carga solo en cada conversación: identidad, autonomía, reglas y herramientas |
+| `.claude/skills/centro-control/SKILL.md` | **La skill:** procedimientos paso a paso (arranque, estado, lanzar, avisos, desbloquear, mantenimiento…) |
+| `.claude/skills/centro-control/references/brief-trabajador.md` | Plantilla de brief y formato de informe de las trabajadoras |
+| `.claude/skills/centro-control/references/dashboard.md` | Especificación del dashboard |
+| `INICIO.md` | Primer mensaje para pegar al crear la sesión |
+| `estado/` | Registro de sesiones, pendientes y bitácora de acciones y decisiones |
+| `proyectos.md` | Catálogo de proyectos (ruta, git, stack) del que salen las carpetas de lanzamiento |
+| `biblioteca-skills/` | Skills que le vayas dando para asignarlas a las trabajadoras (se comparten entre PCs) |
+| `plantillas/` | `estado/`, `proyectos.md` y la página del dashboard vacíos, para un PC nuevo |
+
+`estado/` y `proyectos.md` **no se suben** (`.gitignore`): son de cada PC.
+
+## Instalación en un PC
+
+1. Clona el repo **fuera de OneDrive**. Si dos PCs comparten la misma carpeta de OneDrive, se pisan el
+   `estado/` del otro y el `.git`.
+
+   ```bash
+   gh repo clone JoaquinJBG/claude-centro-control "$HOME/centro-control"
+   ```
+
+2. En el Code tab, crea una **sesión nueva** con esa carpeta.
+3. **Modelo: Opus.** Las sesiones que lance no pueden usar un modelo superior al suyo.
+4. **Modo de permisos: Auto** (recomendado). Las trabajadoras heredan como máximo el modo del centro;
+   en *default* te llegarían muchas peticiones de permiso desde todas ellas. Las reglas de "pide OK antes
+   de…" están en `CLAUDE.md` y se aplican igual en cualquier modo.
+5. Pega el mensaje de `INICIO.md`. Creará el `estado/` y el `proyectos.md` de ese PC a partir de
+   `plantillas/`, hará el inventario, creará los grupos y el dashboard, y te dará el estado.
+6. Cuando cree el dashboard, fíjalo (*pin*) en la barra lateral de claude.ai si quieres tenerlo a mano en el móvil.
+
+## Uso diario
+
+| Le dices | Hace |
+|---|---|
+| `estado` | Resumen: 🟢 trabajando · 🟡 te esperan · ✅ para revisar |
+| `¿qué hace fightlab-auth?` | Detalle de una sesión en ≤8 líneas |
+| `lanza en FightLab: rotación de refresh tokens con tests` | Escribe el brief, elige el modelo, lo lanza en worktree y lo registra |
+| `quiero X en el coach` (algo grande) | Lo trocea en piezas independientes y te pregunta "¿Lanzo?" |
+| `desbloquea` | Lista numerada de preguntas pendientes con su respuesta propuesta; contestas "1 sí, 2 no…" |
+| `dile a X que…` / `pásale a Y lo de X` | Redacta el mensaje, te lo enseña y lo envía con tu OK |
+| `limpia` | Ordena los grupos y te propone qué archivar |
+| `guarda esta skill: …` | La revisa, la guarda en la biblioteca y la cataloga |
+| `cierre` | Resumen del día en la bitácora y propuesta para mañana |
+
+**No hace falta vigilar:** cuando una sesión que lanzó él termina o se bloquea, la app lo despierta
+solo y te avisa.
+
+## Autonomía (modo mixto)
+
+- **Hace solo:** mirar, leer, resumir, apuntar, ordenar la barra lateral, proponer.
+- **Te pide OK:** lanzar (decirle "lanza X" ya es el OK), enviar mensajes, parar, archivar, cambiar modelos o permisos.
+- **Nunca:** borrar sesiones, hacer push, abrir PR o hacer merge, aprobar en tu nombre, tocar trabajo.
+
+## Añadir cosas
+
+- **Un proyecto:** abre una sesión en esa carpeta (el centro lo detecta en el siguiente `estado`) o díselo:
+  "añade el proyecto X en ruta Y". Completa su ficha en `proyectos.md`.
+- **Una skill para las trabajadoras:** "guarda esta skill" y pégala o dale la ruta. Se usa automáticamente en
+  los briefs según su "cuándo asignarla" del catálogo.
+- **Skills desde otro PC** (por ejemplo, el del trabajo), aunque allí no uses el centro:
+
+  ```bash
+  gh repo clone JoaquinJBG/claude-centro-control "$HOME/centro-control"
+  ```
+
+  Copia cada skill a `biblioteca-skills/<nombre>/` (con su `SKILL.md` y sus archivos de apoyo), y luego:
+
+  ```bash
+  git -C "$HOME/centro-control" add biblioteca-skills
+  ```
+
+  ```bash
+  git -C "$HOME/centro-control" commit -m "skills: añadir <nombre>"
+  ```
+
+  ```bash
+  git -C "$HOME/centro-control" push
+  ```
+
+  En el PC personal, dile al centro "baja las skills": hará `git pull`, las revisará y las añadirá al catálogo.
+  Antes de subirlas, quita cualquier dato del trabajo (clientes, URLs internas, tokens), aunque el repo sea privado.
+- **Una decisión permanente:** "apunta como decisión: en FightLab siempre…". Queda como `[DECISIÓN]` en la
+  bitácora y la usará para proponerte respuestas.
+
+## Límites conocidos
+
+- **Las sesiones que abras tú a mano no avisan.** El centro las ve cuando le pides `estado` o al arrancar.
+  Si quieres que algo esté vigilado, pídeselo a él.
+- **No puede pulsar botones de permiso ni aprobar planes dentro de otra sesión.** Te da el enlace para que lo hagas tú.
+- **Las carpetas que no son repo git no admiten worktrees.** El centro no pondrá a dos sesiones a escribir
+  a la vez en una de ellas (va marcado en `proyectos.md` de cada PC).
+- **Cada PC tiene su propio estado y su propio dashboard.** Las sesiones son locales de cada máquina. Lo que se
+  comparte es el kit: el prompt, la skill, las plantillas y la biblioteca de skills.
+- **Coste:** como máximo 4 trabajadoras a la vez, por defecto. Cámbialo diciéndoselo.
+- **OneDrive:** en el PC original el repo está en OneDrive (`Documentos\centro-control`). No clones
+  dentro de esa misma carpeta de OneDrive en otro PC.
+
+## Ideas para más adelante
+
+- **Briefing diario:** una tarea programada que cada mañana te deje un resumen de lo que hay en curso y lo pendiente.
+- **Ronda periódica** (`/loop 30m estado`) si empiezas a trabajar mucho con sesiones abiertas a mano.
+- **Plantillas de tareas por proyecto** (p. ej. "endpoint nuevo en FightLab") dentro de `biblioteca-skills/`.

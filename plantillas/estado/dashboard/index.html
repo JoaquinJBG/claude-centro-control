@@ -1,0 +1,220 @@
+<meta name="dash-one-writer">
+<style>
+  .cc { display: flex; flex-direction: column; gap: var(--cds-gap-xl); max-width: 64rem; margin-inline: auto; font-family: var(--font-anthropic-sans); }
+  .cc-head { display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
+  .cc-title { margin: 0; font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); text-wrap: balance; }
+  .cc-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); }
+  .cc-take span { color: var(--color-fg); }
+  .cc-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: var(--cds-gap-md); }
+  .cc-count { display: flex; flex-direction: column; gap: var(--cds-gap-xs); background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); }
+  .cc-count-label { display: flex; align-items: center; gap: var(--cds-gap-xs); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+  .cc .cc-count b { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .cc-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; flex: none; background: var(--color-fg-muted); }
+  .cc-dot.is-trabajando { background: var(--color-ok); }
+  .cc-dot.is-te_espera { background: var(--color-warn); }
+  .cc-dot.is-revisar { background: var(--cds-chart-reference); }
+  .cc-dot.is-archivada { background: var(--color-border-line); }
+  .cc-section { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
+  .cc-section h2 { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
+  .cc-note { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+  .cc-list { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
+  .cc-wait-card { display: flex; flex-direction: column; gap: var(--cds-gap-xs); background: var(--color-panel); border: 1px solid var(--color-border-line); border-left: 3px solid var(--color-warn); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); }
+  .cc-review-card { display: flex; flex-direction: column; gap: var(--cds-gap-xs); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-sm) var(--cds-pad-lg); }
+  .cc-name { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); overflow-wrap: anywhere; }
+  .cc-text { margin: 0; font-size: var(--cds-font-size-body); overflow-wrap: anywhere; }
+  .cc-groups { display: flex; flex-direction: column; gap: var(--cds-gap-lg); }
+  .cc-group { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
+  .cc-group h3 { margin: 0; font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); }
+  .cc-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: var(--cds-gap-md); }
+  .cc-card { display: flex; flex-direction: column; gap: var(--cds-gap-xs); min-width: 0; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); }
+  .cc-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--cds-gap-sm); }
+  .cc-card-title { font-weight: var(--cds-font-weight-medium); overflow-wrap: anywhere; min-width: 0; }
+  .cc-chip { display: inline-flex; align-items: center; gap: var(--cds-gap-xs); flex: none; font-size: var(--cds-font-size-caption); border: 1px solid var(--color-border-line); border-radius: 999px; padding: 0 var(--cds-pad-sm); white-space: nowrap; }
+  .cc-meta { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .cc-archived summary { cursor: pointer; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); }
+  .cc-archived[open] summary { margin-bottom: var(--cds-gap-sm); }
+  [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+  [data-dash-source-state=empty] { color: transparent; }
+</style>
+
+<div class="cc">
+  <header class="cc-head">
+    <h1 class="cc-title">Centro de Control</h1>
+    <p class="cc-take">Siguiente paso: <span class="dash-skeleton" data-draw="siguiente" data-source="pendientes" data-field="texto" data-row="0">—</span></p>
+  </header>
+
+  <div class="cc-counts">
+    <div class="cc-count">
+      <span class="cc-count-label"><span class="cc-dot is-trabajando"></span>Trabajando</span>
+      <b class="dash-skeleton" data-draw="n" data-source="resumen" data-field="n" data-where="estado=trabajando">—</b>
+    </div>
+    <div class="cc-count">
+      <span class="cc-count-label"><span class="cc-dot is-te_espera"></span>Te esperan</span>
+      <b class="dash-skeleton" data-draw="n" data-source="resumen" data-field="n" data-where="estado=te_espera">—</b>
+    </div>
+    <div class="cc-count">
+      <span class="cc-count-label"><span class="cc-dot is-revisar"></span>Para revisar</span>
+      <b class="dash-skeleton" data-draw="n" data-source="resumen" data-field="n" data-where="estado=revisar">—</b>
+    </div>
+  </div>
+
+  <section class="cc-section" id="te-esperan">
+    <h2>Te esperan</h2>
+    <p class="cc-note">Lo que necesita una respuesta o una acción tuya. Se responde desde el chat del Centro de Control.</p>
+    <div class="cc-list" data-draw="espera" data-source="pendientes sesiones"></div>
+    <p class="cc-note" data-empty="espera" hidden>Nadie te espera ahora mismo.</p>
+  </section>
+
+  <section class="cc-section" id="para-revisar">
+    <h2>Para revisar</h2>
+    <div class="cc-list" data-draw="revisar" data-source="pendientes"></div>
+    <p class="cc-note" data-empty="revisar" hidden>No hay nada pendiente de revisión.</p>
+  </section>
+
+  <section class="cc-section" id="sesiones">
+    <h2>Sesiones por proyecto</h2>
+    <div class="cc-groups" data-draw="proyectos" data-source="sesiones"></div>
+  </section>
+
+  <details class="cc-archived" id="archivadas">
+    <summary>Archivadas</summary>
+    <div class="cc-cards" data-draw="archivadas" data-source="sesiones"></div>
+    <p class="cc-note" data-empty="archivadas" hidden>Todavía no hay sesiones archivadas.</p>
+  </details>
+</div>
+
+<script>
+  dash.calc('resumen', {
+    inputs: ['sesiones'],
+    title: 'Sesiones por estado',
+    description: 'Cuenta cuántas sesiones hay en cada estado.',
+    fn: (sesiones) => ['trabajando', 'te_espera', 'revisar', 'inactiva', 'archivada']
+      .map((estado) => ({estado, n: sesiones.filter((s) => s.estado === estado).length})),
+  });
+
+  const ESTADOS = {
+    te_espera: {label: 'Te espera', orden: 0},
+    trabajando: {label: 'Trabajando', orden: 1},
+    revisar: {label: 'Para revisar', orden: 2},
+    inactiva: {label: 'Inactiva', orden: 3},
+    archivada: {label: 'Archivada', orden: 4},
+  };
+  const fecha = new Intl.DateTimeFormat('es-ES', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'});
+  const enc = (v) => encodeURIComponent(String(v));
+
+  const mark = (node, source, field, id) => {
+    node.dataset.source = source;
+    node.dataset.field = field;
+    node.dataset.where = 'id=' + enc(id);
+    return node;
+  };
+  const el = (tag, cls, text) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  };
+  const rowsOf = (id) => {
+    const d = dash.data(id);
+    return d.status === 'ok' ? (d.data || []) : null;
+  };
+  const setEmpty = (name, isEmpty) => {
+    document.querySelectorAll('[data-empty="' + name + '"]').forEach((n) => { n.hidden = !isEmpty; });
+  };
+
+  const sessionCard = (s) => {
+    const card = el('article', 'cc-card');
+    const top = el('div', 'cc-card-top');
+    top.append(mark(el('span', 'cc-card-title', s.titulo), 'sesiones', 'titulo', s.id));
+    const chip = el('span', 'cc-chip');
+    chip.append(el('span', 'cc-dot is-' + s.estado), document.createTextNode((ESTADOS[s.estado] || {label: s.estado}).label));
+    top.append(chip);
+    card.append(top);
+    card.append(mark(el('span', 'cc-name', s.name), 'sesiones', 'name', s.id));
+    card.append(mark(el('p', 'cc-text', s.objetivo), 'sesiones', 'objetivo', s.id));
+    const meta = el('span', 'cc-meta');
+    meta.append(mark(el('span', null, s.modelo), 'sesiones', 'modelo', s.id));
+    if (s.rama) {
+      meta.append(document.createTextNode(' · '));
+      meta.append(mark(el('span', null, s.rama), 'sesiones', 'rama', s.id));
+    }
+    const t = new Date(s.actualizado);
+    if (!isNaN(t)) meta.append(document.createTextNode(' · ' + fecha.format(t)));
+    card.append(meta);
+    return card;
+  };
+
+  dash.draw('siguiente', (node) => {
+    const rows = rowsOf('pendientes');
+    node.classList.toggle('dash-skeleton', rows === null);
+    node.textContent = rows && rows.length ? rows[0].texto : '—';
+  });
+
+  dash.draw('n', (node) => {
+    const rows = rowsOf('resumen');
+    node.classList.toggle('dash-skeleton', rows === null);
+    const estado = new URLSearchParams(node.dataset.where).get('estado');
+    const row = rows && rows.find((r) => r.estado === estado);
+    node.textContent = row ? String(row.n) : '—';
+  });
+
+  dash.draw('espera', (node) => {
+    const pend = rowsOf('pendientes');
+    const ses = rowsOf('sesiones') || [];
+    node.replaceChildren();
+    if (pend === null) { setEmpty('espera', false); return; }
+    const items = pend.filter((p) => p.tipo === 'responder');
+    setEmpty('espera', items.length === 0);
+    items.forEach((p) => {
+      const card = el('article', 'cc-wait-card');
+      const s = ses.find((x) => x.id === p.sesion);
+      if (s) card.append(mark(el('span', 'cc-name', s.name), 'sesiones', 'name', s.id));
+      card.append(mark(el('p', 'cc-text', p.texto), 'pendientes', 'texto', p.id));
+      node.append(card);
+    });
+  });
+
+  dash.draw('revisar', (node) => {
+    const pend = rowsOf('pendientes');
+    node.replaceChildren();
+    if (pend === null) { setEmpty('revisar', false); return; }
+    const items = pend.filter((p) => p.tipo === 'revisar');
+    setEmpty('revisar', items.length === 0);
+    items.forEach((p) => {
+      const card = el('article', 'cc-review-card');
+      card.append(mark(el('p', 'cc-text', p.texto), 'pendientes', 'texto', p.id));
+      node.append(card);
+    });
+  });
+
+  dash.draw('proyectos', (node) => {
+    const ses = rowsOf('sesiones');
+    node.replaceChildren();
+    if (ses === null) return;
+    const vivas = ses.filter((s) => s.estado !== 'archivada');
+    const proyectos = [...new Set(vivas.map((s) => s.proyecto))];
+    proyectos.forEach((proyecto) => {
+      const group = el('div', 'cc-group');
+      const h = el('h3', null, proyecto);
+      h.dataset.source = 'sesiones';
+      h.dataset.field = 'proyecto';
+      h.dataset.where = 'proyecto=' + enc(proyecto);
+      group.append(h);
+      const cards = el('div', 'cc-cards');
+      vivas.filter((s) => s.proyecto === proyecto)
+        .sort((a, b) => ((ESTADOS[a.estado] || {orden: 9}).orden - (ESTADOS[b.estado] || {orden: 9}).orden))
+        .forEach((s) => cards.append(sessionCard(s)));
+      group.append(cards);
+      node.append(group);
+    });
+  });
+
+  dash.draw('archivadas', (node) => {
+    const ses = rowsOf('sesiones');
+    node.replaceChildren();
+    if (ses === null) { setEmpty('archivadas', false); return; }
+    const arch = ses.filter((s) => s.estado === 'archivada');
+    setEmpty('archivadas', arch.length === 0);
+    arch.forEach((s) => node.append(sessionCard(s)));
+  });
+</script>
