@@ -34,7 +34,9 @@ que te inició otra sesión), o si te inició el propio Centro de Control. **No 
 - a las conversaciones sueltas que no trabajan en ningún proyecto;
 - a los proyectos fuera del ámbito del Centro en este PC: <CARPETAS_FUERA_DE_AMBITO o «ninguno»>.
 
-Si te inició el Centro, tus propios turnos ya le llegan solos: avísale solo de lo que hagan tus hijas.
+Si te inició el Centro y sigues anidada bajo él, tus propios turnos ya le llegan solos: avísale solo de lo
+que hagan tus hijas. Si el Centro te dice que te ha desanclado (lo hace para ordenar la barra lateral), avísale
+también de tus propios turnos: cuando termines, te bloquees o tengas una pregunta para el usuario.
 
 **Qué hacer.** Manda un mensaje con `SendMessage` (`to`: el id de arriba; si la herramienta no está cargada,
 cárgala con `ToolSearch` y `select:SendMessage`) cada vez que:

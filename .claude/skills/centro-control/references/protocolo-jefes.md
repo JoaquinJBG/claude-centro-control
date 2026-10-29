@@ -21,6 +21,20 @@ sesiones leen siempre. Mantén los dos: el bloque para siempre y el mensaje para
 - **Reenvíalo** si ves que un jefe lleva un rato sin avisarte de cosas que sí han pasado (por ejemplo,
   tras una compactación de su conversación).
 
+## Aviso de desanclada
+
+Las sesiones que lanza el Centro quedan anidadas bajo él en la barra lateral y le avisan solas al terminar cada
+turno. Para meterlas en la sección de su proyecto hay que desanclarlas (`detach_session`), y entonces esos avisos
+dejan de llegar. Justo después de desanclar una, mándale esto (también con el OK general):
+
+```
+Del Centro de Control: te he desanclado de mí para ordenar la barra lateral (ahora estás en la sección «<SECCIÓN>»).
+Tu tarea no cambia. La app ya no me avisa sola cuando terminas un turno: desde ahora mándame tú un SendMessage
+(to: "<ID_CENTRO>") cuando termines la tarea (con tu informe final), te bloquees o tengas una pregunta para el
+usuario. Primera línea: `[PROYECTO] EVENTO: resumen`. La regla también está en el bloque «Aviso al Centro de Control»
+de tu CLAUDE.md de usuario.
+```
+
 ## Mensaje (cambia `<ID_CENTRO>` por el id de esta sesión: `get_session` con `"self"`)
 
 ```

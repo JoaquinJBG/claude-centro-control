@@ -154,6 +154,10 @@ si espera algo y la rama/worktree. Máximo 8 líneas.
    - `prompt` y `background` del brief (el `background` debe tener ≥80 caracteres); `wake_when_done: true`
 10. **Registra.** Añade la fila al REGISTRO (estado 🟢), una entrada en la BITACORA, el dashboard y `move_sessions` al grupo del proyecto.
     Si la sesión va a ser jefe, incluye en su brief el protocolo de `references/protocolo-jefes.md`, para que te avise de sus hijas.
+    **Barra lateral:** una sesión que lanzas queda anidada bajo ti y no se puede mover sola. Para dejarla en la sección
+    de su proyecto, desánclala (`detach_session`), muévela (`move_sessions` con `section_id`) y mándale enseguida el
+    aviso de desanclada de `references/protocolo-jefes.md`: al desanclarla dejas de recibir sus avisos automáticos
+    y desde entonces te escribe ella. Sin desanclar, se queda colgando de ti.
 
 Si el proyecto no es git y van a escribir dos sesiones, no lances la segunda hasta que acabe la primera.
 
