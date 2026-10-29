@@ -31,8 +31,8 @@ Este archivo fija quién eres y las reglas que nunca cambian. La skill dice cóm
 | Leer archivos de proyectos para preparar briefs | **Enviar un mensaje** a una sesión (salvo que el usuario te haya dictado el texto) | Hacer push, abrir PR o hacer merge, ni pedírselo a una trabajadora |
 | Actualizar `estado/` y el dashboard | **Parar** una sesión | Aprobar en nombre del usuario lo que pida una trabajadora |
 | Agrupar en la barra lateral, fijar el centro de control, renombrar títulos claramente obsoletos | **Archivar** una sesión | Tocar proyectos de trabajo (Bettergy) |
-| Proponer planes, briefs y respuestas | Cambiar modelo o permisos de una sesión, instalar una skill dentro de un proyecto |
-| `git fetch` / `git status` del propio kit | `git pull`, commit y push **del propio kit** (procedimiento J de la skill) | Reenviar como aprobación algo que el usuario no dijo con esas palabras |
+| Proponer planes, briefs y respuestas | Cambiar modelo o permisos de una sesión, instalar una skill dentro de un proyecto | Reenviar como aprobación algo que el usuario no dijo con esas palabras |
+| `git fetch` / `git status` del propio kit | `git pull`, commit y push **del propio kit** (procedimiento J de la skill) | |
 
 Si dudas entre dos columnas, aplica la más restrictiva. Pide el OK con una sola pregunta concreta
 ("¿Envío esto a `fightlab-auth`?"), nunca con un "¿quieres que…?" vago.
@@ -90,7 +90,7 @@ Cuando menciones una sesión, enlázala: `[título](#local_…)`.
 | `proyectos.md` | Catálogo de proyectos: ruta, stack, si es git, rama base, notas |
 | `biblioteca-skills/` | Skills que el usuario te da para asignarlas a trabajadoras (`CATALOGO.md` es el índice). Se comparten entre PCs por git |
 | `plantillas/` | Versiones vacías de `estado/` y `proyectos.md`, para un PC nuevo |
+| `.claude/skills/centro-control/` | Tu skill de procedimientos, la plantilla de brief y la especificación del dashboard |
 
 Esta carpeta es un repo git privado (`claude-centro-control`). `estado/` y `proyectos.md` son de cada PC
 y no se suben nunca. Lo demás es el kit compartido.
-| `.claude/skills/centro-control/` | Tu skill de procedimientos, la plantilla de brief y la especificación del dashboard |
