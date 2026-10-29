@@ -39,11 +39,12 @@ Una sesión de Claude Code que hace de **orquestador** de todas las demás. Tú 
 
 ## Instalación en un PC
 
-1. Clona el repo **fuera de OneDrive**. Si dos PCs comparten la misma carpeta de OneDrive, se pisan el
-   `estado/` del otro y el `.git`.
+1. Clona el repo **fuera de OneDrive** (y de cualquier carpeta sincronizada). OneDrive sincroniza `.git`
+   archivo a archivo: bloquea archivos a mitad de un commit, crea duplicados y mezcla el `estado/` de
+   varios PCs.
 
    ```bash
-   gh repo clone JoaquinJBG/claude-centro-control "$HOME/centro-control"
+   gh repo clone JoaquinJBG/claude-centro-control "$HOME/proyectos/centro-control"
    ```
 
 2. En el Code tab, crea una **sesión nueva** con esa carpeta.
@@ -87,21 +88,21 @@ solo y te avisa.
 - **Skills desde otro PC** (por ejemplo, el del trabajo), aunque allí no uses el centro:
 
   ```bash
-  gh repo clone JoaquinJBG/claude-centro-control "$HOME/centro-control"
+  gh repo clone JoaquinJBG/claude-centro-control "$HOME/proyectos/centro-control"
   ```
 
   Copia cada skill a `biblioteca-skills/<nombre>/` (con su `SKILL.md` y sus archivos de apoyo), y luego:
 
   ```bash
-  git -C "$HOME/centro-control" add biblioteca-skills
+  git -C "$HOME/proyectos/centro-control" add biblioteca-skills
   ```
 
   ```bash
-  git -C "$HOME/centro-control" commit -m "skills: añadir <nombre>"
+  git -C "$HOME/proyectos/centro-control" commit -m "skills: añadir <nombre>"
   ```
 
   ```bash
-  git -C "$HOME/centro-control" push
+  git -C "$HOME/proyectos/centro-control" push
   ```
 
   En el PC personal, dile al centro "baja las skills": hará `git pull`, las revisará y las añadirá al catálogo.
@@ -119,8 +120,8 @@ solo y te avisa.
 - **Cada PC tiene su propio estado y su propio dashboard.** Las sesiones son locales de cada máquina. Lo que se
   comparte es el kit: el prompt, la skill, las plantillas y la biblioteca de skills.
 - **Coste:** como máximo 4 trabajadoras a la vez, por defecto. Cámbialo diciéndoselo.
-- **OneDrive:** en el PC original el repo está en OneDrive (`Documentos\centro-control`). No clones
-  dentro de esa misma carpeta de OneDrive en otro PC.
+- **Nada de OneDrive:** el repo va en una carpeta local (`~/proyectos/centro-control`). GitHub ya hace de
+  copia de seguridad del kit, y el `estado/` es de cada PC.
 
 ## Ideas para más adelante
 
