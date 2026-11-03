@@ -1,0 +1,449 @@
+<title>Centro de Control</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Layout: una columna para el móvil. Arriba la frescura y la bandeja de preguntas; después el semáforo de jefes y la regla de 3; lo demás, plegado. */
+  :root {
+    --bg: #f3f5f8;
+    --panel: #ffffff;
+    --fg: #182030;
+    --muted: #5b6577;
+    --line: #d9dee7;
+    --accent: #3346a8;
+    --st-trabajando: #1d8a4c;
+    --st-espera: #b26b00;
+    --st-bloqueado: #c0352b;
+    --st-pausa: #6a7898;
+    --st-terminado: #0d7a87;
+    --st-inactivo: #9aa3b2;
+    --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+    --r: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10141b; --panel: #181d27; --fg: #e6eaf1; --muted: #9ba4b4; --line: #2a3140; --accent: #8fa0ff;
+      --st-trabajando: #47c381; --st-espera: #f0b33e; --st-bloqueado: #f2736a; --st-pausa: #8e9cbc; --st-terminado: #3fb7c5; --st-inactivo: #6c7586;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10141b; --panel: #181d27; --fg: #e6eaf1; --muted: #9ba4b4; --line: #2a3140; --accent: #8fa0ff;
+    --st-trabajando: #47c381; --st-espera: #f0b33e; --st-bloqueado: #f2736a; --st-pausa: #8e9cbc; --st-terminado: #3fb7c5; --st-inactivo: #6c7586;
+    color-scheme: dark;
+  }
+
+  body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.45; }
+  .cc { max-width: 46rem; margin-inline: auto; padding-block: 20px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 28px; }
+  h1, h2 { font-family: var(--font-display); font-weight: 700; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+  h1 { font-size: 1.75rem; line-height: 1.1; }
+  h2 { font-size: 1.15rem; display: flex; align-items: baseline; gap: 8px; }
+  h2 .n { font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); font-weight: 500; }
+  .mono { font-family: var(--font-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .muted { color: var(--muted); }
+  .small { font-size: 0.85rem; }
+  section { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+
+  /* Cabecera */
+  .head { display: flex; flex-direction: column; gap: 6px; }
+  .fresh { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; font-size: 0.9rem; color: var(--muted); }
+  .stale { border: 1px solid color-mix(in srgb, var(--st-espera) 55%, var(--line)); background: color-mix(in srgb, var(--st-espera) 12%, var(--panel)); border-radius: var(--r); padding: 10px 12px; font-size: 0.92rem; }
+  .summary { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 3px 10px; font-size: 0.88rem; white-space: nowrap; }
+  .pill b { font-variant-numeric: tabular-nums; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--st, var(--st-inactivo)); flex: none; }
+  [data-st="trabajando"] { --st: var(--st-trabajando); }
+  [data-st="espera"] { --st: var(--st-espera); }
+  [data-st="bloqueado"] { --st: var(--st-bloqueado); }
+  [data-st="pausa"] { --st: var(--st-pausa); }
+  [data-st="terminado"] { --st: var(--st-terminado); }
+  [data-st="inactivo"] { --st: var(--st-inactivo); }
+
+  /* Bandeja de preguntas */
+  .q-list { display: flex; flex-direction: column; gap: 12px; }
+  .q { background: var(--panel); border: 1px solid color-mix(in srgb, var(--st-espera) 40%, var(--line)); border-radius: var(--r); padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .q.is-old { border-color: var(--st-bloqueado); }
+  .q-top { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 0.85rem; color: var(--muted); }
+  .q-id { font-family: var(--font-mono); font-weight: 500; color: var(--fg); background: color-mix(in srgb, var(--st-espera) 16%, var(--panel)); border-radius: 6px; padding: 1px 7px; }
+  .q.is-old .q-id { background: color-mix(in srgb, var(--st-bloqueado) 16%, var(--panel)); }
+  .q-age.is-old { color: var(--st-bloqueado); font-weight: 700; }
+  .q-text { margin: 0; font-size: 1.05rem; overflow-wrap: anywhere; }
+  .q-prop { margin: 0; font-size: 0.92rem; color: var(--muted); overflow-wrap: anywhere; }
+  .q-prop b { color: var(--fg); font-weight: 700; }
+  .q-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  button { font: inherit; cursor: pointer; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); padding: 7px 12px; min-height: 38px; }
+  button:hover { border-color: var(--accent); }
+  button:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); font-weight: 700; }
+  button.link { border: 0; background: none; padding: 4px 0; min-height: 0; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+  button:disabled { opacity: 0.55; cursor: default; }
+  .q-other { display: flex; flex-direction: column; gap: 8px; }
+  textarea { font: inherit; width: 100%; box-sizing: border-box; min-height: 4.5em; resize: vertical; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); padding: 8px 10px; }
+  .q-status { margin: 0; font-size: 0.9rem; }
+  .q-status.is-ok { color: var(--st-trabajando); }
+  .q-status.is-bad { color: var(--st-bloqueado); }
+  .q-answered { margin: 0; font-size: 0.92rem; border-left: 3px solid var(--st-terminado); padding-left: 10px; overflow-wrap: anywhere; }
+
+  /* Semáforo de jefes */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 10.5rem), 1fr)); gap: 10px; }
+  .tile { --st: var(--st-inactivo); background: color-mix(in srgb, var(--st) 9%, var(--panel)); border: 1px solid color-mix(in srgb, var(--st) 38%, var(--line)); border-radius: var(--r); padding: 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .tile-name { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; line-height: 1.2; overflow-wrap: anywhere; }
+  .tile-st { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 700; color: var(--st); text-transform: uppercase; letter-spacing: 0.06em; }
+  .tile-text { margin: 0; font-size: 0.9rem; overflow-wrap: anywhere; }
+  .tile-meta { display: flex; flex-wrap: wrap; gap: 2px 10px; font-size: 0.8rem; color: var(--muted); margin-top: auto; }
+  .tile-q { color: var(--st-espera); font-weight: 700; }
+  @keyframes latido { 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--st) 0%, transparent); } 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--st) 45%, transparent); } }
+  .tile[data-st="espera"] .dot, .tile[data-st="bloqueado"] .dot { animation: latido 2.2s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .tile .dot { animation: none !important; } }
+
+  /* Regla de 3 */
+  .slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .slot { border: 1px dashed var(--line); border-radius: var(--r); padding: 10px; font-size: 0.9rem; min-width: 0; overflow-wrap: anywhere; color: var(--muted); }
+  .slot.is-full { border-style: solid; border-color: color-mix(in srgb, var(--st-trabajando) 45%, var(--line)); background: color-mix(in srgb, var(--st-trabajando) 8%, var(--panel)); color: var(--fg); font-weight: 700; }
+
+  /* Listas plegadas */
+  details { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); }
+  summary { cursor: pointer; padding: 12px 14px; font-family: var(--font-display); font-weight: 600; display: flex; gap: 8px; align-items: baseline; }
+  summary .n { font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); font-weight: 500; }
+  .rows { display: flex; flex-direction: column; }
+  .row { padding: 10px 14px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 0.92rem; overflow-wrap: anywhere; }
+  .row-top { display: flex; flex-wrap: wrap; gap: 2px 10px; font-size: 0.8rem; color: var(--muted); }
+  .row-top .k { font-weight: 700; }
+  .row-top .k.is-decision { color: var(--accent); }
+
+  .empty { margin: 0; color: var(--muted); font-size: 0.95rem; background: var(--panel); border: 1px dashed var(--line); border-radius: var(--r); padding: 14px; }
+  .foot { font-size: 0.8rem; color: var(--muted); margin: 0; }
+</style>
+
+<div class="cc">
+  <header class="head">
+    <h1>Centro de Control</h1>
+    <div class="fresh" id="fresh"><span>Cargando datos…</span></div>
+    <div class="stale" id="stale" hidden></div>
+    <div class="summary" id="summary" aria-label="Resumen"></div>
+  </header>
+
+  <section id="bandeja" aria-labelledby="h-bandeja">
+    <h2 id="h-bandeja">Te esperan <span class="n" id="n-bandeja"></span></h2>
+    <div class="q-list" id="q-list"></div>
+    <p class="empty" id="q-empty" hidden>Nadie te espera ahora mismo. Cuando un jefe pregunte algo, aparecerá aquí con su número (P-…).</p>
+  </section>
+
+  <section id="jefes" aria-labelledby="h-jefes">
+    <h2 id="h-jefes">Proyectos</h2>
+    <div class="tiles" id="tiles"></div>
+    <p class="empty" id="tiles-empty" hidden>Todavía no hay proyectos. El Centro los escribe aquí cada vez que revisa el estado.</p>
+  </section>
+
+  <section id="regla" aria-labelledby="h-regla">
+    <h2 id="h-regla">Proyectos trabajando <span class="n" id="n-regla"></span></h2>
+    <div class="slots" id="slots"></div>
+    <p class="small muted" id="cola"></p>
+  </section>
+
+  <details id="para-ti">
+    <summary>Para ti <span class="n" id="n-revisar"></span></summary>
+    <div class="rows" id="revisar"></div>
+  </details>
+
+  <details id="actividad">
+    <summary>Actividad reciente <span class="n" id="n-actividad"></span></summary>
+    <div class="rows" id="act"></div>
+  </details>
+
+  <p class="foot">Los datos los escribe el Centro de Control desde su carpeta <span class="mono">estado/</span>. Si algo no cuadra, manda lo que diga el Centro.</p>
+</div>
+
+<script>
+(() => {
+  const ESTADOS = {
+    bloqueado: {label: 'Bloqueado', orden: 0},
+    espera: {label: 'Te espera', orden: 1},
+    trabajando: {label: 'Trabajando', orden: 2},
+    terminado: {label: 'Terminado', orden: 3},
+    pausa: {label: 'En pausa', orden: 4},
+    inactivo: {label: 'Inactivo', orden: 5},
+  };
+  const HORAS_VIEJO = 3;
+  const HORAS_PREGUNTA_VIEJA = 24;
+
+  const S = {jefes: null, preguntas: null, meta: null, revisar: null, actividad: null, respuestas: {}, error: null, lento: false};
+  const ui = {abiertas: new Set(), estado: {}, borrador: {}, otra: new Set()};
+  let db = null;
+  let comments = null;
+  let puedeAvisar = false;
+
+  const usar = (name) => (window.claude && typeof window.claude.use === 'function') ? window.claude.use(name) : Promise.resolve(null);
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, text) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  };
+  const ms = (iso) => { const t = Date.parse(iso); return isNaN(t) ? null : t; };
+  const hace = (iso) => {
+    const t = ms(iso);
+    if (t === null) return '';
+    const min = Math.max(0, Math.round((Date.now() - t) / 60000));
+    if (min < 1) return 'ahora';
+    if (min < 60) return 'hace ' + min + ' min';
+    const h = Math.round(min / 60);
+    if (h < 24) return 'hace ' + h + ' h';
+    const d = Math.round(h / 24);
+    return d === 1 ? 'hace 1 día' : 'hace ' + d + ' días';
+  };
+  const horas = (iso) => { const t = ms(iso); return t === null ? 0 : (Date.now() - t) / 3600000; };
+  const fecha = new Intl.DateTimeFormat('es-ES', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'});
+  const emojiDe = (proyecto) => {
+    const j = (S.jefes || []).find((x) => x.proyecto === proyecto);
+    return j && j.emoji ? j.emoji + ' ' : '';
+  };
+  const ordenEstado = (e) => (ESTADOS[e] || {orden: 9}).orden;
+
+  function renderHead() {
+    const fresh = $('fresh');
+    fresh.replaceChildren();
+    if (S.error) { fresh.append(el('span', null, 'No se pueden leer los datos ahora: ' + S.error)); }
+    else if (!S.meta) { fresh.append(el('span', null, S.lento ? 'Los datos tardan en llegar. Si sigue así, recarga más tarde.' : 'Cargando datos…')); }
+    else {
+      const sync = S.meta.ultima_sync;
+      const t = ms(sync);
+      fresh.append(el('span', null, 'Actualizado ' + hace(sync)));
+      if (t !== null) fresh.append(el('span', 'mono small', fecha.format(new Date(t))));
+    }
+    const stale = $('stale');
+    const viejo = S.meta && horas(S.meta.ultima_sync) > HORAS_VIEJO;
+    stale.hidden = !viejo;
+    if (viejo) stale.textContent = 'Estos datos son de ' + hace(S.meta.ultima_sync) + '. Pídele «estado» al Centro para ponerlos al día.';
+
+    const sum = $('summary');
+    sum.replaceChildren();
+    if (!S.jefes || !S.preguntas) return;
+    const cuenta = (st) => S.jefes.filter((j) => j.estado === st).length;
+    const pill = (st, n, label) => {
+      const p = el('span', 'pill');
+      p.dataset.st = st;
+      p.append(el('span', 'dot'), el('b', null, String(n)), document.createTextNode(' ' + label));
+      return p;
+    };
+    sum.append(pill('espera', S.preguntas.length, S.preguntas.length === 1 ? 'pregunta abierta' : 'preguntas abiertas'));
+    const bloq = cuenta('bloqueado');
+    if (bloq) sum.append(pill('bloqueado', bloq, bloq === 1 ? 'bloqueado' : 'bloqueados'));
+    sum.append(pill('trabajando', cuenta('trabajando'), 'trabajando'));
+  }
+
+  function renderPreguntas() {
+    const list = $('q-list');
+    const foco = document.activeElement && document.activeElement.id && document.activeElement.id.startsWith('resp-') ? document.activeElement.id : null;
+    const qs = S.preguntas;
+    list.replaceChildren();
+    $('n-bandeja').textContent = qs ? String(qs.length) : '';
+    $('q-empty').hidden = !(qs && qs.length === 0);
+    if (!qs) return;
+    qs.slice().sort((a, b) => (ms(a.desde) || 0) - (ms(b.desde) || 0)).forEach((p) => list.append(tarjeta(p)));
+    const f = foco && document.getElementById(foco);
+    if (f) { f.focus(); f.setSelectionRange(f.value.length, f.value.length); }
+  }
+
+  function tarjeta(p) {
+    const vieja = horas(p.desde) > HORAS_PREGUNTA_VIEJA;
+    const card = el('article', 'q' + (vieja ? ' is-old' : ''));
+    card.id = 'q-' + p.id;
+    const top = el('div', 'q-top');
+    top.append(el('span', 'q-id', p.id), el('span', null, emojiDe(p.proyecto) + (p.proyecto || '')));
+    if (p.de) top.append(el('span', 'mono', p.de));
+    top.append(el('span', 'q-age' + (vieja ? ' is-old' : ''), (vieja ? '⏰ ' : '') + hace(p.desde)));
+    card.append(top, el('p', 'q-text', p.texto || ''));
+    if (p.propongo) {
+      const prop = el('p', 'q-prop');
+      prop.append(document.createTextNode('El Centro propone: '), el('b', null, p.propongo));
+      card.append(prop);
+    }
+
+    const resp = S.respuestas[p.id];
+    const st = ui.estado[p.id];
+    if (resp && !ui.abiertas.has(p.id)) {
+      const a = el('p', 'q-answered');
+      a.append(document.createTextNode('Respondida desde el panel ' + hace(resp.en) + ': «' + (resp.texto || '') + '». '));
+      a.append(el('span', 'muted', resp.avisado ? 'Enviada al Centro.' : 'El Centro la recoge en su próximo turno.'));
+      card.append(a);
+      const cambiar = el('button', 'link', 'Cambiar la respuesta');
+      cambiar.type = 'button';
+      cambiar.addEventListener('click', () => { ui.abiertas.add(p.id); renderPreguntas(); });
+      card.append(cambiar);
+      return card;
+    }
+
+    const actions = el('div', 'q-actions');
+    const opciones = Array.isArray(p.opciones) ? p.opciones.filter((o) => typeof o === 'string' && o.trim()) : [];
+    opciones.forEach((o) => {
+      const b = el('button', o === p.propongo ? 'primary' : '', o);
+      b.type = 'button';
+      b.addEventListener('click', () => responder(p, o, card));
+      actions.append(b);
+    });
+    const otra = el('button', opciones.length ? 'link' : '', opciones.length ? 'Otra respuesta' : 'Escribir respuesta');
+    otra.type = 'button';
+    actions.append(otra);
+    card.append(actions);
+
+    const box = el('div', 'q-other');
+    box.hidden = !ui.otra.has(p.id);
+    const ta = el('textarea');
+    ta.id = 'resp-' + p.id;
+    ta.value = ui.borrador[p.id] || '';
+    ta.addEventListener('input', () => { ui.borrador[p.id] = ta.value; });
+    ta.maxLength = 1500;
+    ta.setAttribute('aria-label', 'Tu respuesta a ' + p.id);
+    const enviar = el('button', 'primary', puedeAvisar ? 'Enviar al Centro' : 'Guardar respuesta');
+    enviar.type = 'button';
+    enviar.addEventListener('click', () => { const t = ta.value.trim(); if (t) responder(p, t, card); else ta.focus(); });
+    box.append(ta, el('div', 'q-actions'));
+    box.lastChild.append(enviar);
+    otra.addEventListener('click', () => { ui.otra.add(p.id); box.hidden = false; ta.focus(); });
+    card.append(box);
+
+    if (st) card.append(el('p', 'q-status' + (st.cls ? ' ' + st.cls : ''), st.text));
+    if (st && st.ocupado) card.querySelectorAll('button, textarea').forEach((n) => { n.disabled = true; });
+    return card;
+  }
+
+  async function responder(p, texto, card) {
+    if (!db) { ui.estado[p.id] = {text: 'No hay conexión con los datos: díselo al Centro en el chat.', cls: 'is-bad'}; renderPreguntas(); return; }
+    ui.estado[p.id] = {text: 'Enviando…', ocupado: true};
+    renderPreguntas();
+    let avisado = false;
+    if (comments && puedeAvisar) {
+      try {
+        const anchor = await comments.anchorFor(document.getElementById('q-' + p.id) || card);
+        await comments.sendToClaude({anchor, text: 'Respuesta a ' + p.id + ' (' + (p.proyecto || '') + '): ' + texto});
+        avisado = true;
+      } catch (e) { avisado = false; }
+    }
+    try {
+      await db.collection('respuestas').doc(p.id).set({texto, en: new Date().toISOString(), avisado, pregunta: p.texto || '', proyecto: p.proyecto || ''});
+    } catch (e) {
+      ui.estado[p.id] = {text: avisado ? 'Enviada al Centro, pero no se pudo guardar en el panel.' : 'No se pudo guardar. Vuelve a intentarlo o díselo al Centro en el chat.', cls: avisado ? 'is-ok' : 'is-bad'};
+      renderPreguntas();
+      return;
+    }
+    ui.abiertas.delete(p.id);
+    ui.otra.delete(p.id);
+    delete ui.borrador[p.id];
+    ui.estado[p.id] = {text: avisado ? 'Enviada. El Centro la recibe ahora.' : 'Guardada. El Centro la recoge en su próximo turno; si corre prisa, dile «mira el panel».', cls: 'is-ok'};
+    renderPreguntas();
+  }
+
+  function renderJefes() {
+    const tiles = $('tiles');
+    tiles.replaceChildren();
+    const js = S.jefes;
+    $('tiles-empty').hidden = !(js && js.length === 0);
+    if (!js) return;
+    const abiertas = {};
+    (S.preguntas || []).forEach((p) => { abiertas[p.proyecto] = (abiertas[p.proyecto] || 0) + 1; });
+    js.slice().sort((a, b) => ordenEstado(a.estado) - ordenEstado(b.estado) || (a.orden || 0) - (b.orden || 0)).forEach((j) => {
+      const t = el('article', 'tile');
+      t.dataset.st = ESTADOS[j.estado] ? j.estado : 'inactivo';
+      t.append(el('span', 'tile-name', (j.emoji ? j.emoji + ' ' : '') + (j.proyecto || '')));
+      const st = el('span', 'tile-st');
+      st.append(el('span', 'dot'), document.createTextNode((ESTADOS[j.estado] || {label: j.estado || '—'}).label));
+      t.append(st);
+      if (j.frase) t.append(el('p', 'tile-text', j.frase));
+      const meta = el('div', 'tile-meta');
+      if (abiertas[j.proyecto]) meta.append(el('span', 'tile-q', abiertas[j.proyecto] === 1 ? '1 pregunta' : abiertas[j.proyecto] + ' preguntas'));
+      if (j.hijas) meta.append(el('span', null, j.hijas === 1 ? '1 hija trabajando' : j.hijas + ' hijas trabajando'));
+      if (j.jefe) meta.append(el('span', 'mono', j.jefe));
+      if (j.actualizado) meta.append(el('span', null, hace(j.actualizado)));
+      t.append(meta);
+      tiles.append(t);
+    });
+  }
+
+  function renderRegla() {
+    const slots = $('slots');
+    slots.replaceChildren();
+    const m = S.meta;
+    if (!m) { $('n-regla').textContent = ''; $('cola').textContent = ''; return; }
+    const limite = Number(m.limite) || 3;
+    const activos = Array.isArray(m.activos) ? m.activos : [];
+    $('n-regla').textContent = activos.length + ' de ' + limite;
+    for (let i = 0; i < Math.max(limite, activos.length); i++) {
+      const a = activos[i];
+      const s = el('div', 'slot' + (a ? ' is-full' : ''), a ? emojiDe(a) + a : 'Hueco libre');
+      slots.append(s);
+    }
+    const cola = Array.isArray(m.cola) ? m.cola : [];
+    $('cola').textContent = cola.length ? 'En cola: ' + cola.map((c) => emojiDe(c) + c).join(' · ') + '. Entran cuando se libere un hueco y lo digas.' : 'No hay proyectos en cola.';
+  }
+
+  function renderListas() {
+    const rev = $('revisar');
+    rev.replaceChildren();
+    const rs = S.revisar || [];
+    $('n-revisar').textContent = S.revisar ? String(rs.length) : '';
+    rs.slice().sort((a, b) => (a.orden || 0) - (b.orden || 0)).forEach((r) => {
+      const row = el('div', 'row');
+      const top = el('div', 'row-top');
+      top.append(el('span', 'k', emojiDe(r.proyecto) + (r.proyecto || '')));
+      if (r.tipo) top.append(el('span', null, r.tipo));
+      row.append(top, el('span', null, r.texto || ''));
+      rev.append(row);
+    });
+    if (S.revisar && !rs.length) rev.append(el('div', 'row muted', 'Nada pendiente.'));
+
+    const act = $('act');
+    act.replaceChildren();
+    const as = (S.actividad || []).slice().sort((a, b) => (ms(b.fecha) || 0) - (ms(a.fecha) || 0));
+    $('n-actividad').textContent = S.actividad ? String(as.length) : '';
+    as.forEach((a) => {
+      const row = el('div', 'row');
+      const top = el('div', 'row-top');
+      const t = ms(a.fecha);
+      top.append(el('span', 'mono', t === null ? '' : fecha.format(new Date(t))));
+      top.append(el('span', 'k' + (a.tipo === 'decision' ? ' is-decision' : ''), ({decision: 'Decisión', aviso: 'Aviso', accion: 'Acción'})[a.tipo] || a.tipo || ''));
+      top.append(el('span', null, emojiDe(a.proyecto) + (a.proyecto || '')));
+      row.append(top, el('span', null, a.texto || ''));
+      act.append(row);
+    });
+  }
+
+  function render() {
+    renderHead();
+    renderPreguntas();
+    renderJefes();
+    renderRegla();
+    renderListas();
+  }
+
+  function filas(snap) { return snap.docs.filter((d) => d.exists).map((d) => Object.assign({id: d.id}, d.data())); }
+
+  async function start() {
+    render();
+    const lento = setTimeout(() => { S.lento = true; render(); }, 10000);
+    const listo = () => { clearTimeout(lento); S.lento = false; };
+    db = await usar('db');
+    if (!db) { clearTimeout(lento); S.error = 'esta vista no tiene acceso (¿sesión cerrada?)'; render(); return; }
+    const fallo = (e) => { listo(); S.error = (e && e.code) || 'error'; render(); };
+    db.collection('jefes').onSnapshot((s) => { S.jefes = filas(s); render(); }, fallo);
+    db.collection('preguntas').onSnapshot((s) => { S.preguntas = filas(s).filter((p) => p.estado !== 'respondida' && p.estado !== 'caducada'); render(); }, fallo);
+    db.collection('revisar').onSnapshot((s) => { S.revisar = filas(s); render(); }, fallo);
+    db.collection('actividad').onSnapshot((s) => { S.actividad = filas(s); render(); }, fallo);
+    db.collection('respuestas').onSnapshot((s) => { S.respuestas = {}; filas(s).forEach((r) => { S.respuestas[r.id] = r; }); render(); }, fallo);
+    db.doc('meta/centro').onSnapshot((d) => { if (!d.metadata.fromCache) listo(); S.meta = d.exists ? d.data() : null; render(); }, fallo);
+
+    comments = await usar('comments');
+    if (comments) {
+      try { puedeAvisar = (await comments.canSendToClaude()) === 'available'; } catch (e) { puedeAvisar = false; }
+      render();
+    }
+  }
+
+  setInterval(() => { if (!document.hidden) { renderHead(); renderJefes(); renderRegla(); } }, 60000);
+  start();
+})();
+</script>

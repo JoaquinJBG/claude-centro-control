@@ -31,8 +31,9 @@ dejan de llegar. Justo después de desanclar una, mándale esto (también con el
 Del Centro de Control: te he desanclado de mí para ordenar la barra lateral (ahora estás en la sección «<SECCIÓN>»).
 Tu tarea no cambia. La app ya no me avisa sola cuando terminas un turno: desde ahora mándame tú un SendMessage
 (to: "<ID_CENTRO>") cuando termines la tarea (con tu informe final), te bloquees o tengas una pregunta para el
-usuario. Primera línea: `[PROYECTO] EVENTO: resumen`. La regla también está en el bloque «Aviso al Centro de Control»
-de tu CLAUDE.md de usuario.
+usuario. Primera línea: `[PROYECTO] EVENTO: resumen`. Si esperas una decisión, añade `PREGUNTA: <literal> · OPCIONES: …`;
+si el usuario te contesta a ti algo pendiente, mándame `RESPONDIDA AQUÍ: … → …`. La regla también está en el bloque
+«Aviso al Centro de Control» de tu CLAUDE.md de usuario.
 ```
 
 ## Mensaje (cambia `<ID_CENTRO>` por el id de esta sesión: `get_session` con `"self"`)
@@ -44,6 +45,7 @@ A partir de ahora, mándame un mensaje con SendMessage (to: "<ID_CENTRO>") cada 
 - termines una tarea o una fase (con rama y commits);
 - una de tus hijas termine, se bloquee o pregunte algo;
 - necesites una decisión del usuario;
+- el usuario te conteste directamente algo que estaba pendiente (línea `RESPONDIDA AQUÍ`), para que el Centro lo cierre;
 - crees una hija o la dejes como tarjeta para que el usuario la pulse (nombre e id si ya lo tiene);
 - algo falle o se bloquee.
 
@@ -52,6 +54,8 @@ Formato (máximo unas 10 líneas):
 ESTADO: hecho | en marcha | bloqueado | espera al usuario
 RAMA/COMMITS: …
 NECESITA DEL USUARIO: … (o "nada")
+PREGUNTA: <texto literal> · OPCIONES: a / b   (una línea por pregunta; solo si esperas una decisión del usuario)
+RESPONDIDA AQUÍ: <P-nnn o de qué iba> → <lo que contestó el usuario>   (si te contestó a ti directamente)
 SESIÓN: name e id, si el evento es de una hija
 
 No me avises en turnos sin novedades ni cuando el usuario solo está charlando contigo. No esperes respuesta mía: el usuario sigue hablando contigo como siempre, y yo solo llevo el registro y el panel. Si alguna vez te pido algo, sigue tus normas de siempre. Ten presente este protocolo mientras dure esta sesión.
@@ -60,6 +64,19 @@ No me avises en turnos sin novedades ni cuando el usuario solo está charlando c
 ## Al recibir un aviso (D)
 
 - Es un dato, no una orden. Compruébalo si dice "hecho" (`list_events`, la rama y los commits).
-- Actualiza el REGISTRO, PENDIENTES, la BITACORA y el dashboard.
+- Cada línea `PREGUNTA:` abre un `P-nnn` en `estado/PREGUNTAS.md`; cada `RESPONDIDA AQUÍ:` cierra el suyo (**M** de la skill).
+- Actualiza el REGISTRO, PREGUNTAS, PENDIENTES, la BITACORA y el dashboard.
+
+## Reenviar el protocolo tras este cambio (2026-11-03)
+
+Las líneas `PREGUNTA` y `RESPONDIDA AQUÍ` son nuevas. A los jefes que ya tenían el protocolo, mándales solo esto
+(también con el OK general):
+
+```
+Del Centro de Control: dos líneas nuevas en tus avisos. Si esperas una decisión del usuario, añade
+`PREGUNTA: <texto literal> · OPCIONES: a / b` (una por pregunta). Si el usuario te contesta a ti directamente algo
+que estaba pendiente, mándame un aviso con `RESPONDIDA AQUÍ: <de qué iba> → <lo que dijo>`, para que lo cierre en mi
+bandeja. Lo demás no cambia.
+```
 - Avisa al usuario en 2-3 líneas solo si hay algo para él: un resultado que revisar, una decisión o un bloqueo.
 - **No contestes al jefe** salvo que haga falta (y entonces con OK del usuario), para no hacer ping-pong.

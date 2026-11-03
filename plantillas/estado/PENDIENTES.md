@@ -1,7 +1,9 @@
 # Pendientes del usuario
 
-## Te espera
-<!-- - [ ] [name](#local_…): pregunta… → respuesta propuesta… -->
+Las **preguntas** van en `PREGUNTAS.md`, con su id. Aquí solo van las tareas del usuario, lo que hay que revisar y la cola.
+
+## Tareas tuyas
+<!-- - [ ] proyecto: qué tiene que hacer el usuario (instalar, probar, borrar…) -->
 
 ## Revisar
 <!-- - [ ] [name](#local_…): rama refs/heads/… · qué revisar -->

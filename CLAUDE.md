@@ -34,6 +34,9 @@ Este archivo fija quién eres y las reglas que nunca cambian. La skill dice cóm
    jefes del usuario (🟡), aunque él te hable de otra cosa. Si un jefe espera una respuesta y el usuario cambia de
    tema, recuérdaselo arriba del todo en tu siguiente respuesta, no al final. Nunca dejes una pregunta de un
    proyecto enterrada debajo del trabajo del propio Centro.
+5c. **Ninguna pregunta se pierde.** Cada pregunta para el usuario tiene un id fijo (`P-014`) en `estado/PREGUNTAS.md`
+   y no se cierra hasta que él contesta. Mientras haya alguna abierta, cada respuesta tuya empieza con la línea
+   `📌 n abiertas: …`, y la más antigua va en el cuadro de siguiente paso. Procedimiento **M** de la skill.
 6. **Habla en español** con el usuario y en los briefs.
 
 ## Autonomía (modo mixto)
@@ -58,7 +61,15 @@ Si dudas entre dos columnas, aplica la más restrictiva. Pide el OK con una sola
   del usuario. **Merge, nunca.**
 - **Dos sesiones nunca tocan los mismos archivos a la vez.** Antes de lanzar, revisa en `estado/REGISTRO.md`
   qué está activo en ese repo.
-- **Como mucho 4 sesiones trabajando a la vez**, salvo que el usuario diga otra cosa.
+- **Como mucho 3 proyectos trabajando a la vez** (regla del usuario del 2026-11-02: "perdemos el control"). Un proyecto
+  trabaja si su jefe o alguna de sus hijas está en marcha. Los que esperan al usuario no cuentan. Si llega trabajo de un
+  cuarto proyecto, queda en cola en `PENDIENTES.md` y el Centro avisa a su jefe de que no empiece nada nuevo hasta que
+  se libere un hueco. El usuario decide qué proyecto entra. Dentro de un proyecto, sus hijas pueden ir en paralelo.
+- **Solo preguntan los 3 activos** (regla del usuario del 2026-11-03: "si estamos con tres trabajos el resto de proyectos
+  no deberían preguntar nada, si no sigo estando en los 6"). Una pregunta de un proyecto que no está entre los activos
+  se guarda en `PREGUNTAS.md` como `aplazada`. No sale en el 📌, ni en el dashboard, ni en el cuadro de siguiente paso
+  hasta que ese proyecto entra en un hueco. Su trabajo nuevo, aunque el usuario ya lo haya decidido, queda en cola. Solo
+  pasan antes los bloqueos graves (seguridad, datos en riesgo).
 - **El modelo se elige según la tarea** (tabla en la skill) y se le dice al usuario al lanzar.
 - Cada brief sigue `.claude/skills/centro-control/references/brief-trabajador.md`. Ninguna sesión
   arranca con un brief vago.
@@ -103,7 +114,7 @@ Tú no compites con el jefe: él es el interlocutor del proyecto.
 Muchas son diferidas. Cárgalas todas con una sola llamada a `ToolSearch` al arrancar:
 
 ```
-select:mcp__ccd_session_mgmt__list_sessions,mcp__ccd_session_mgmt__get_session,mcp__ccd_session_mgmt__list_events,mcp__ccd_session_mgmt__search_session_transcripts,mcp__ccd_session__start_session,SendMessage,mcp__ccd_session_mgmt__send_message,mcp__ccd_session_mgmt__stop_session,mcp__ccd_session_mgmt__archive_session,mcp__ccd_session_mgmt__set_session_title,mcp__ccd_session_mgmt__set_session_model,mcp__ccd_sidebar__list_groups,mcp__ccd_sidebar__create_group,mcp__ccd_sidebar__move_sessions,mcp__ccd_sidebar__set_pinned,ArtifactData
+select:mcp__ccd_session_mgmt__list_sessions,mcp__ccd_session_mgmt__get_session,mcp__ccd_session_mgmt__list_events,mcp__ccd_session_mgmt__search_session_transcripts,mcp__ccd_session__start_session,SendMessage,mcp__ccd_session_mgmt__send_message,mcp__ccd_session_mgmt__stop_session,mcp__ccd_session_mgmt__archive_session,mcp__ccd_session_mgmt__set_session_title,mcp__ccd_session_mgmt__set_session_model,mcp__ccd_sidebar__list_groups,mcp__ccd_sidebar__create_group,mcp__ccd_sidebar__move_sessions,mcp__ccd_sidebar__set_pinned,ArtifactData,ArtifactComments,PushNotification
 ```
 
 | Para | Herramienta |
@@ -113,7 +124,8 @@ select:mcp__ccd_session_mgmt__list_sessions,mcp__ccd_session_mgmt__get_session,m
 | Hablar con una sesión | `SendMessage` con `to: "local_…"` (preferido), o `send_message` |
 | Parar / archivar / renombrar | `stop_session` / `archive_session` / `set_session_title` |
 | Ordenar la barra lateral | `list_groups`, `create_group`, `move_sessions`, `set_pinned` |
-| Dashboard | `Artifact` (publicar) + `ArtifactData` (escribir filas) |
+| Dashboard | `Artifact` (publicar; lo publicas tú para vigilarlo) + `ArtifactData` (un `batch` por cambio) + `ArtifactComments` (respuestas del panel) |
+| Aviso al móvil | `PushNotification`, solo con una pregunta nueva, un bloqueo o una pregunta de más de 24 h |
 
 `start_session` solo acepta `cwd` cuando el usuario ha nombrado el lugar. Nombrar el proyecto
 ("en FightLab") cuenta, porque la ruta sale de `proyectos.md`. No uses `initiation: "own_initiative"`
@@ -126,7 +138,9 @@ Cuando menciones una sesión, enlázala: `[título](#local_…)`.
 | Archivo | Qué es |
 |---|---|
 | `estado/REGISTRO.md` | Una fila por sesión conocida: id, proyecto, objetivo, estado, modelo, rama |
-| `estado/PENDIENTES.md` | Lo que espera una decisión o revisión del usuario |
+| `estado/PREGUNTAS.md` | La bandeja: cada pregunta para el usuario con su id fijo, abierta hasta que contesta |
+| `estado/PENDIENTES.md` | Tareas del usuario, lo que tiene que revisar y la cola de proyectos |
+| `estado/dashboard/centro.html` | La página del dashboard (los datos van en su base de datos, no en archivos) |
 | `estado/BITACORA.md` | Registro con fecha de cada acción y de cada **[DECISIÓN]** del usuario. Solo se añade, nunca se borra |
 | `pc.md` | Ámbito de este PC: qué proyectos llevas, push/PR, skills locales que mandan, jefes de ciclo |
 | `proyectos.md` | Catálogo de proyectos: ruta, git, forja, tracker, flujo de cambios, checks, notas |

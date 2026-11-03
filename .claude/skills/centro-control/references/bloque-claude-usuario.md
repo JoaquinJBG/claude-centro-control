@@ -43,6 +43,7 @@ cárgala con `ToolSearch` y `select:SendMessage`) cada vez que:
 - termines una tarea o una fase (con rama y commits);
 - una de tus hijas termine, se bloquee o pregunte algo;
 - necesites una decisión del usuario;
+- el usuario te conteste directamente algo que estaba pendiente (línea `RESPONDIDA AQUÍ`), para que el Centro lo cierre;
 - crees una hija o la dejes como tarjeta para que el usuario la pulse (nombre e id si ya lo tiene);
 - algo falle o se bloquee.
 
@@ -52,6 +53,8 @@ Formato (máximo unas 10 líneas):
 ESTADO: hecho | en marcha | bloqueado | espera al usuario
 RAMA/COMMITS: …
 NECESITA DEL USUARIO: … (o "nada")
+PREGUNTA: <texto literal> · OPCIONES: a / b   (una línea por pregunta; solo si esperas una decisión del usuario)
+RESPONDIDA AQUÍ: <P-nnn o de qué iba> → <lo que contestó el usuario>   (si te contestó a ti directamente)
 SESIÓN: name e id, si el evento es de una hija
 ```
 

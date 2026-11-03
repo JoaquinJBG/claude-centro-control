@@ -14,7 +14,7 @@ Una sesión de Claude Code que hace de **orquestador** de todas las demás. Tú 
                      │
             ┌────────▼────────┐        estado/  (fuente de verdad)
             │ Centro de Control│◄──────►REGISTRO · PENDIENTES · BITÁCORA
-            │    (Opus)       │──────► Dashboard (claude.ai, solo lectura)
+            │    (Opus)       │──────► Dashboard (claude.ai, en vivo)  
             └─┬──────┬──────┬─┘
      lanza/   │      │      │   avisos automáticos al terminar o bloquearse
     mensajes  ▼      ▼      ▼   (solo de las sesiones que lanzó él)
@@ -66,7 +66,7 @@ para un centro en el PC del trabajo (proyectos del trabajo, con PR/MR) y otro en
 | `¿qué hace fightlab-auth?` | Detalle de una sesión en ≤8 líneas |
 | `lanza en FightLab: rotación de refresh tokens con tests` | Escribe el brief, elige el modelo, lo lanza en worktree y lo registra |
 | `quiero X en el coach` (algo grande) | Lo trocea en piezas independientes y te pregunta "¿Lanzo?" |
-| `desbloquea` | Lista numerada de preguntas pendientes con su respuesta propuesta; contestas "1 sí, 2 no…" |
+| `desbloquea` | Las preguntas abiertas con su id (`P-014`…) y la respuesta propuesta; contestas "14 sí, 15 no…", aquí o desde el dashboard |
 | `dile a X que…` / `pásale a Y lo de X` | Redacta el mensaje, te lo enseña y lo envía con tu OK |
 | `limpia` | Ordena los grupos y te propone qué archivar |
 | `guarda esta skill: …` | La revisa, la guarda en la biblioteca y la cataloga |
