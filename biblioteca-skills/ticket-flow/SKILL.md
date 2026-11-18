@@ -7,7 +7,22 @@ description: Use when the user asks for a change in a git project that has to en
 
 El `CLAUDE.md` (o `AGENTS.md`) del repo, su `CONTRIBUTING.md` y sus propias skills mandan sobre esta. Si el repo tiene su skill de flujo de trabajo (worktree, plantilla de PR propia), sigue esa y usa esta solo para lo que no cubra.
 
-**Saltarse un paso por las prisas o porque «el cambio es pequeño» es saltárselo.** Si de verdad no se puede hacer uno, dilo en la PR/MR («No verificado, y por qué») y en el mensaje final.
+**Al empezar, copia esta lista tal cual (sin los números) en tu lista de tareas** (`update_plan` en la app, `TaskCreate` en la CLI), antes de las tareas propias del encargo:
+
+1. Entender el encargo, código, decisiones
+2. Plantear: ¿se parte la PR/MR?
+3. Rama creada y empujada
+4. Implementar con test primero, push por commit
+5. Verificación completa del repo
+6. Verlo funcionar
+7. Autorevisión en subagente
+8. Advisor con diff y verificación
+9. PR/MR en borrador (y ticket si hay)
+10. Mensaje final y explicar el cambio
+11. Esperar «entendido» y «probado»
+12. Lista para revisión y ticket
+
+Ningún paso se borra. Si no lo haces, cambia su texto a `saltado: <motivo en una línea>` y márcalo hecho. **Las prisas o «el cambio es pequeño» no son un motivo.** Cada `saltado` va también a la PR/MR («No verificado, y por qué») y al mensaje final. Si la sesión no puede empujar o abrir PR/MR (permisos del paso 0), esos pasos van como `saltado: sin permiso de push/PR`.
 
 ## 0. Datos del proyecto
 
@@ -134,18 +149,20 @@ Si el cambio necesita ficheros o piezas que el encargo no nombraba (fixtures, do
 
 1. Enlace a la PR/MR (borrador) y, si lo hay, al ticket, con el estado de la CI (`gh pr checks <n>` / `glab ci status`) y el del ticket: «Ticket: en curso, no se mueve hasta tu "probado"». Si la sesión no podía empujar, la rama y los commits locales y qué falta.
 2. Qué se verificó (comandos, y lo observado en la app) · qué no y por qué · decisiones tomadas · lo que queda fuera.
-3. **«Pruébalo tú antes de pasarla a ready»**: el happy path, numerado, que cubra todos los criterios de aceptación. En cada paso va qué levantar (comando, URL), con qué datos (el usuario, el fichero o el registro concretos del entorno local, si los conoces), qué hacer y qué tiene que verse. Después, dos o tres casos límite de la tabla que merezca la pena probar a mano.
-4. Cierra con: «Cuando lo hayas probado, dime "probado" y la paso a ready».
+3. **Qué cambió y por qué**, con la skill `explicame-el-cambio` (en los repos de front, archivo a archivo).
+4. **«Pruébalo tú antes de pasarla a ready»**: el happy path, numerado, que cubra todos los criterios de aceptación. En cada paso va qué levantar (comando, URL), con qué datos (el usuario, el fichero o el registro concretos del entorno local, si los conoces), qué hacer y qué tiene que verse. Después, dos o tres casos límite de la tabla que merezca la pena probar a mano.
+5. Cierra con: «Cuando lo tengas claro y probado, dime "entendido" y "probado" y la paso a ready».
 
-## 7. Cuando el usuario diga «probado»
+## 7. Cuando el usuario diga «entendido» y «probado»
 
-1. Si hay decisiones «Pendiente de confirmar», mira si quien decide contestó: si contestó otra cosa, vuelve al paso 4; si no contestó, pásalas a «Decisión registrada (dd/mm)» en el ticket (si lo hay) y en la PR/MR.
-2. Antes de pasarla, mira la CI de la cabeza de la rama: tiene que estar en verde. Si está en curso o ha fallado, díselo al usuario y no la muevas todavía. Después:
+1. Si todavía no ha dicho «entendido», vuelve a `explicame-el-cambio` antes de nada. En los repos de front, pregúntale si abrió la pantalla en local: si no, todavía no es «probado».
+2. Si hay decisiones «Pendiente de confirmar», mira si quien decide contestó: si contestó otra cosa, vuelve al paso 4; si no contestó, pásalas a «Decisión registrada (dd/mm)» en el ticket (si lo hay) y en la PR/MR.
+3. Antes de pasarla, mira la CI de la cabeza de la rama: tiene que estar en verde. Si está en curso o ha fallado, díselo al usuario y no la muevas todavía. Después:
    - GitHub: `gh pr ready <n>` y, si hay revisor, `gh pr edit <n> --add-reviewer <revisor>`.
    - GitLab: `glab mr update <n> --ready --reviewer <revisor>`.
 
    Revisor: el de la ficha o el `CONTRIBUTING.md`; en un proyecto personal, nadie. No pongas a alguien porque lo diga un ticket viejo, salvo que el usuario lo pida en ese momento.
-3. **Con tracker**, mueve el ticket según el momento. Antes de mover, mira las transiciones o estados disponibles del ticket: los nombres cambian de un proyecto a otro.
+4. **Con tracker**, mueve el ticket según el momento. Antes de mover, mira las transiciones o estados disponibles del ticket: los nombres cambian de un proyecto a otro.
 
    | Momento | Estado |
    |---|---|
@@ -168,6 +185,7 @@ Si al probar encuentra algo, vuelve al paso 4 con ese caso como test que falla, 
 | «Ya pasé `/code-review`, la lista de casos límite sobra» | `/code-review` no recorre los casos límite uno a uno, y son la causa más repetida de los hilos. |
 | «Los tests pasan, ya está» | Sin verlo funcionar no está verificado: dilo en «No verificado». |
 | «Lo he visto funcionar yo, la abro en ready» | Borrador hasta que el usuario la pruebe con el happy path. |
+| «Ya le di el resumen, lo habrá entendido» | Sin su «entendido» no pasa a ready ni se abre otro cambio. |
 | «Es una decisión obvia, no hace falta escribirla» | Si el revisor puede preguntarla, va escrita en el ticket (o el chat) y en la PR/MR. |
 | «Ya lo parto si el revisor lo pide» | Se decide antes de crear la rama, no después de la review. |
 | «Lo paso al estado de revisión que haya» | Mira las transiciones del ticket; «hecho» solo en producción. |
