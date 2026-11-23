@@ -58,7 +58,7 @@ PREGUNTA: <texto literal> · OPCIONES: a / b   (una línea por pregunta; solo si
 RESPONDIDA AQUÍ: <P-nnn o de qué iba> → <lo que contestó el usuario>   (si te contestó a ti directamente)
 SESIÓN: name e id, si el evento es de una hija
 
-No me avises en turnos sin novedades ni cuando el usuario solo está charlando contigo. No esperes respuesta mía: el usuario sigue hablando contigo como siempre, y yo solo llevo el registro y el panel. Si alguna vez te pido algo, sigue tus normas de siempre. Ten presente este protocolo mientras dure esta sesión.
+No me avises en turnos sin novedades ni cuando el usuario solo está charlando contigo. El usuario suele contestar desde el móvil en mi sesión: mándame **todas** las preguntas para él y sigue con lo que no dependa de ellas, sin esperar a que te conteste en la tuya. Te paso sus respuestas con sus palabras. Si tu clasificador exige que un OK lo escriba él en tu sesión (merges, licencias, despliegues), dilo en el aviso con el texto exacto y se lo pido. Si alguna vez te pido algo, sigue tus normas de siempre. Ten presente este protocolo mientras dure esta sesión.
 ```
 
 ## Al recibir un aviso (D)

@@ -132,6 +132,10 @@ si espera algo y la rama/worktree. Máximo 8 líneas.
    hasta que arranque la hija.
 1. **Concreta el objetivo.** Necesitas proyecto, resultado esperado y criterio de "hecho". Si falta algo
    que no puedes deducir de `proyectos.md`, de la BITACORA o del código, haz **una** pregunta.
+1b. **Biblioteca primero.** Si el encargo es investigar, busca antes en `estado/investigaciones/` (lee `INDICE.md`). Si ya
+   hay algo sobre el tema, pásaselo a la trabajadora en el brief para que investigue solo lo que falta o ha cambiado. Pide
+   que el entregable vaya también a `estado/investigaciones/<proyecto>/AAAA-MM-DD-tema.md`, con la cabecera y la fila
+   en el índice que explica el propio `INDICE.md`.
 2. **Trocea si hace falta.** Separa en varias sesiones solo las piezas independientes: que no toquen los
    mismos archivos y que ninguna necesite el resultado de otra. Las que dependen entre sí van en una
    sola sesión, o en secuencia (lanzas la segunda cuando llegue el aviso de la primera).
@@ -178,7 +182,8 @@ Llega un `<side-sessions-event>` o un mensaje "From …" de otra sesión.
 3. Clasifica y actúa:
    - **Terminó bien** → estado ✅ en el REGISTRO y en `PENDIENTES.md` ("revisar rama `refs/heads/…`"),
      y avisa al usuario en 2-3 líneas: qué hizo, qué rama, qué tiene que revisar. Si había piezas en cola
-     que dependían de esta, propón lanzarlas (C).
+     que dependían de esta, propón lanzarlas (C). Si entrega una investigación o un informe, cópialo a la biblioteca
+     (`estado/investigaciones/<proyecto>/` y su fila en `INDICE.md`), aunque solo haya llegado por chat.
    - **Pregunta** (línea `PREGUNTA:` o una pregunta en su transcript) → abre un `P-nnn` (**M**) y aplica F a esa sesión.
    - **`RESPONDIDA AQUÍ:`** → el usuario contestó en la sesión del jefe: cierra ese `P-nnn` (**M**) con sus palabras.
    - **Bloqueada** → 🔴 en el REGISTRO y en el dashboard, con qué hace falta (por ejemplo, "abre la sesión y aprueba el permiso").
@@ -304,6 +309,10 @@ que espera al usuario vive en `estado/PREGUNTAS.md` con un **id fijo**, y no des
    decisión más urgente, va esa.
 4. **Responder.** El usuario contesta por id ("P-14 sí", "14 sí, 15 no"), con las palabras de la pregunta o desde el
    panel. Si no está claro a qué id responde, pregúntalo con una línea antes de enviar nada.
+   **Todo se le pide al usuario desde el Centro**, porque contesta desde el móvil: los jefes mandan aquí sus preguntas
+   y no esperan respuesta en su propia sesión. A veces el clasificador del jefe no acepta un OK reenviado (merges,
+   licencias, despliegues). Entonces dile al usuario el texto exacto que debe escribir y en qué sesión, con su
+   enlace. Esa barrera no se esquiva.
 5. **Cerrar.** Pasa la fila a `Cerradas` con la respuesta **literal**, el cómo (`chat` · `panel` · `en el jefe` ·
    `caducada`) y la hora. Después: envíala al jefe (E, citando las palabras; si te la dictó el usuario, no hace falta
    OK), apúntala en la BITACORA (como `[DECISIÓN]` si lo es) y borra `preguntas/<id>` y `respuestas/<id>` del dashboard
